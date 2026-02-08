@@ -6,87 +6,37 @@
     <title>VIRTUOSA | Catálogo Online</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        :root {
-            --dourado: #C5A059;
-            --dourado-dark: #A68546;
-            --nude: #F9F1F0;
-            --rose: #EAD8D3;
-            --branco: #FFFFFF;
-            --texto: #4A4A4A;
-        }
-
+        :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: var(--branco); }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
-
-        /* HEADER */
-        header { 
-            padding: 15px; text-align: center; border-bottom: 1px solid var(--rose); 
-            background: white; position: sticky; top: 0; z-index: 100;
-        }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid var(--rose); background: white; position: sticky; top: 0; z-index: 100; }
         .logo { max-width: 150px; }
-
-        /* VITRINE */
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        
         .produto-card { border: 1px solid var(--nude); border-radius: 10px; padding: 10px; text-align: center; }
         .produto-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
         .produto-nome { font-size: 0.9rem; margin: 10px 0 5px; font-weight: 600; }
         .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 10px; }
+        .btn-add { background: var(--dourado); color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 0.8rem; }
         
-        .btn-add { 
-            background: var(--dourado); color: white; border: none; padding: 8px 12px; 
-            border-radius: 5px; cursor: pointer; width: 100%; font-size: 0.8rem;
-            transition: 0.3s;
-        }
-        .btn-add:hover { background: var(--dourado-dark); }
-
-        /* SACOLA FLUTUANTE */
-        .cart-badge {
-            position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark);
-            color: white; padding: 15px 20px; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 10px;
-        }
-
-        /* MODAL DE CHECKOUT */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; z-index: 1000;
-            justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; width: 90%; max-width: 500px; max-height: 90vh;
-            border-radius: 15px; padding: 25px; overflow-y: auto;
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        /* SACOLA */
+        .cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark); color: white; padding: 15px 20px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 10px; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 95%; max-width: 500px; max-height: 90vh; border-radius: 15px; padding: 20px; overflow-y: auto; }
         
-        /* FORMULÁRIO */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--dourado-dark); font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px; border: 1px solid var(--rose); border-radius: 5px; font-family: 'Montserrat';
-        }
-        
-        .metodo-pagamento {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;
-        }
-        .pay-option {
-            border: 1px solid var(--rose); padding: 10px; text-align: center; border-radius: 5px; cursor: pointer;
-        }
-        .pay-option.active { border-color: var(--dourado); background: var(--nude); }
+        /* ITENS NO CHECKOUT */
+        .item-checkout { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--nude); }
+        .item-info { flex-grow: 1; margin-right: 10px; }
+        .item-nome { font-size: 0.85rem; font-weight: 600; }
+        .controles-qtd { display: flex; align-items: center; gap: 10px; }
+        .btn-qtd { background: var(--nude); border: none; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; color: var(--dourado-dark); font-weight: bold; }
+        .btn-remover { color: #ff4d4d; margin-left: 15px; cursor: pointer; font-size: 0.9rem; }
 
-        .btn-finalizar {
-            background: #25d366; color: white; width: 100%; padding: 15px; border: none;
-            border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer;
-        }
-
-        /* RESUMO DA SACOLA NO MODAL */
-        .resumo-itens { border-bottom: 1px solid var(--nude); margin-bottom: 20px; padding-bottom: 10px; }
-        .item-checkout { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
-
+        .form-group { margin-top: 15px; }
+        .form-group label { display: block; font-size: 0.75rem; color: var(--dourado-dark); font-weight: bold; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid var(--rose); border-radius: 5px; margin-top: 4px; }
+        .btn-finalizar { background: #25d366; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -96,56 +46,34 @@
     </header>
 
     <div class="container">
-        <h2 style="text-align: center; margin-bottom: 30px; color: var(--dourado-dark);">Catálogo Exclusivo</h2>
-        
-        <div class="grid-produtos" id="vitrine">
-            </div>
+        <h2 style="text-align: center; margin-bottom: 25px; font-family: 'Playfair Display'; color: var(--dourado-dark);">Catálogo Online</h2>
+        <div class="grid-produtos" id="vitrine"></div>
     </div>
 
     <div class="cart-badge" onclick="abrirCheckout()">
         <i class="fas fa-shopping-bag"></i>
-        <span id="cart-count">0</span> Itens - R$ <span id="cart-total">0,00</span>
+        <span id="cart-count">0</span> - R$ <span id="cart-total">0,00</span>
     </div>
 
     <div class="modal" id="modalCheckout">
         <div class="modal-content">
-            <div class="modal-header">
+            <div style="display:flex; justify-content: space-between; align-items: center;">
                 <h3>Sua Sacola</h3>
-                <i class="fas fa-times" onclick="fecharCheckout()" style="cursor: pointer;"></i>
+                <i class="fas fa-times" onclick="fecharCheckout()" style="cursor:pointer"></i>
             </div>
 
-            <div class="resumo-itens" id="resumoItens">
-                </div>
+            <div id="resumoItens" style="margin-top: 15px;"></div>
 
             <form id="formPedido">
-                <h4 style="margin-bottom: 15px; border-bottom: 1px solid var(--nude);">Dados de Entrega</h4>
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="nome" required placeholder="Como podemos te chamar?">
-                </div>
-                <div class="form-group">
-                    <label>Endereço Completo</label>
-                    <input type="text" id="endereco" required placeholder="Rua, número e bairro">
-                </div>
-                <div class="form-group">
-                    <label>Ponto de Referência</label>
-                    <input type="text" id="referencia" placeholder="Ex: Próximo à padaria...">
-                </div>
-
-                <h4 style="margin-bottom: 10px; margin-top: 20px;">Pagamento</h4>
-                <div class="metodo-pagamento">
-                    <div class="pay-option active" id="payPix" onclick="setPagamento('PIX')">
-                        <i class="fas fa-pix"></i><br>PIX
-                    </div>
-                    <div class="pay-option" id="payCartao" onclick="setPagamento('Cartão de Crédito')">
-                        <i class="fas fa-credit-card"></i><br>Cartão
-                    </div>
-                </div>
-
-                <div id="infoPix" style="margin-top: 15px; font-size: 0.8rem; background: var(--suave); padding: 10px; border-radius: 5px;">
-                    <strong>Chave PIX:</strong> sua@chaveaqui.com <br>
-                    <small>(Você enviará o comprovante pelo WhatsApp)</small>
-                </div>
+                <div class="form-group"><label>Nome</label><input type="text" id="nome" required></div>
+                <div class="form-group"><label>Endereço Completo</label><input type="text" id="endereco" required></div>
+                <div class="form-group"><label>Ponto de Referência</label><input type="text" id="referencia"></div>
+                
+                <h4 style="margin-top:20px; font-size: 0.9rem;">Pagamento:</h4>
+                <select id="pagamento" style="width:100%; padding:10px; border-radius:5px; border:1px solid var(--rose); margin-top:5px;">
+                    <option value="PIX">PIX</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                </select>
 
                 <button type="button" class="btn-finalizar" onclick="enviarPedido()">
                     <i class="fab fa-whatsapp"></i> ENVIAR PEDIDO
@@ -155,90 +83,94 @@
     </div>
 
     <script>
-        // BANCO DE DADOS DE PRODUTOS (Simples para o protótipo)
         const produtos = [
             { id: 1, nome: "Sérum Facial Gold", preco: 129.90, img: "https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?w=400" },
             { id: 2, nome: "Conjunto Renda Rosé", preco: 89.00, img: "https://images.unsplash.com/photo-1612444530582-fc66183b16f7?w=400" },
-            { id: 3, nome: "Body Elegance Nude", preco: 110.00, img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400" },
-            { id: 4, nome: "Óleo Corporal Silk", preco: 55.00, img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400" }
+            { id: 3, nome: "Body Elegance Nude", preco: 110.00, img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400" }
         ];
 
-        let sacola = [];
-        let pagamentoEscolhido = "PIX";
+        let sacola = {};
 
-        // RENDERIZAR VITRINE
         function renderVitrine() {
-            const vitrine = document.getElementById('vitrine');
-            vitrine.innerHTML = produtos.map(p => `
+            document.getElementById('vitrine').innerHTML = produtos.map(p => `
                 <div class="produto-card">
                     <img src="${p.img}" class="produto-img">
                     <div class="produto-nome">${p.nome}</div>
-                    <div class="produto-preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+                    <div class="produto-preco">R$ ${p.preco.toFixed(2)}</div>
                     <button class="btn-add" onclick="addSacola(${p.id})">Adicionar</button>
                 </div>
             `).join('');
         }
 
-        // LÓGICA DA SACOLA
         function addSacola(id) {
-            const prod = produtos.find(p => p.id === id);
-            sacola.push(prod);
+            if (sacola[id]) { sacola[id].qtd += 1; } 
+            else { const p = produtos.find(prod => prod.id === id); sacola[id] = { ...p, qtd: 1 }; }
             atualizarBadge();
         }
 
-        function atualizarBadge() {
-            document.getElementById('cart-count').innerText = sacola.length;
-            const total = sacola.reduce((acc, curr) => acc + curr.preco, 0);
-            document.getElementById('cart-total').innerText = total.toFixed(2).replace('.', ',');
+        function mudarQtd(id, delta) {
+            if (sacola[id]) {
+                sacola[id].qtd += delta;
+                if (sacola[id].qtd <= 0) delete sacola[id];
+                atualizarBadge();
+                abrirCheckout(); // Recarrega a lista no modal
+            }
         }
 
-        // CONTROLE DO MODAL
+        function removerItem(id) {
+            delete sacola[id];
+            atualizarBadge();
+            abrirCheckout();
+        }
+
+        function atualizarBadge() {
+            let totalItens = 0; let precoTotal = 0;
+            Object.values(sacola).forEach(item => { totalItens += item.qtd; precoTotal += (item.preco * item.qtd); });
+            document.getElementById('cart-count').innerText = totalItens;
+            document.getElementById('cart-total').innerText = precoTotal.toFixed(2).replace('.', ',');
+        }
+
         function abrirCheckout() {
-            if(sacola.length === 0) return alert("Sua sacola está vazia!");
-            
             const resumo = document.getElementById('resumoItens');
-            resumo.innerHTML = sacola.map(i => `
+            const itensArray = Object.values(sacola);
+            if(itensArray.length === 0) { fecharCheckout(); return; }
+
+            resumo.innerHTML = itensArray.map(item => `
                 <div class="item-checkout">
-                    <span>${i.nome}</span>
-                    <span>R$ ${i.preco.toFixed(2)}</span>
+                    <div class="item-info">
+                        <div class="item-nome">${item.nome}</div>
+                        <div style="font-size:0.8rem; color:var(--dourado-dark)">R$ ${item.preco.toFixed(2)}</div>
+                    </div>
+                    <div class="controles-qtd">
+                        <button class="btn-qtd" onclick="mudarQtd(${item.id}, -1)">-</button>
+                        <span>${item.qtd}</span>
+                        <button class="btn-qtd" onclick="mudarQtd(${item.id}, 1)">+</button>
+                    </div>
+                    <i class="fas fa-trash btn-remover" onclick="removerItem(${item.id})"></i>
                 </div>
             `).join('');
-
             document.getElementById('modalCheckout').style.display = 'flex';
         }
 
-        function fecharCheckout() {
-            document.getElementById('modalCheckout').style.display = 'none';
-        }
+        function fecharCheckout() { document.getElementById('modalCheckout').style.display = 'none'; }
 
-        function setPagamento(tipo) {
-            pagamentoEscolhido = tipo;
-            document.getElementById('payPix').classList.toggle('active', tipo === 'PIX');
-            document.getElementById('payCartao').classList.toggle('active', tipo === 'Cartão de Crédito');
-            document.getElementById('infoPix').style.display = tipo === 'PIX' ? 'block' : 'none';
-        }
-
-        // ENVIO PARA WHATSAPP
         function enviarPedido() {
             const nome = document.getElementById('nome').value;
             const endereco = document.getElementById('endereco').value;
-            const referencia = document.getElementById('referencia').value;
+            const ref = document.getElementById('referencia').value;
+            const pag = document.getElementById('pagamento').value;
+            if(!nome || !endereco) return alert("Preencha nome e endereço!");
 
-            if(!nome || !endereco) return alert("Por favor, preencha nome e endereço.");
+            let total = 0;
+            let texto = `*PEDIDO VIRTUOSA*%0A%0A*Cliente:* ${nome}%0A*Entrega:* ${endereco}%0A*Ref:* ${ref}%0A%0A*ITENS:*%0A`;
+            
+            Object.values(sacola).forEach(item => {
+                texto += `- ${item.qtd}x ${item.nome} (R$ ${(item.preco * item.qtd).toFixed(2)})%0A`;
+                total += (item.preco * item.qtd);
+            });
 
-            let textoItens = sacola.map(i => `- ${i.nome} (R$ ${i.preco.toFixed(2)})`).join('%0A');
-            const total = sacola.reduce((acc, curr) => acc + curr.preco, 0);
-
-            const mensagem = `*NOVO PEDIDO - VIRTUOSA*%0A%0A` +
-                `*CLIENTE:* ${nome}%0A` +
-                `*ENDEREÇO:* ${endereco}%0A` +
-                `*REF:* ${referencia}%0A%0A` +
-                `*ITENS:*%0A${textoItens}%0A%0A` +
-                `*TOTAL:* R$ ${total.toFixed(2)}%0A` +
-                `*PAGAMENTO:* ${pagamentoEscolhido}`;
-
-            const numeroWhats = "55XXXXXXXXXXX"; // COLOQUE SEU NÚMERO AQUI
-            window.open(`https://wa.me/${numeroWhats}?text=${mensagem}`);
+            texto += `%0A*TOTAL: R$ ${total.toFixed(2)}*%0A*Pagamento:* ${pag}`;
+            window.open(`https://wa.me/55XXXXXXXXXXX?text=${texto}`); // Substitua pelo seu número
         }
 
         renderVitrine();
