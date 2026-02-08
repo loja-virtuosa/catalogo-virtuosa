@@ -9,47 +9,32 @@
     <style>
         :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: var(--branco); line-height: 1.5; }
-        header { padding: 15px; text-align: center; border-bottom: 1px solid var(--rose); background: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: var(--branco); }
+        header { padding: 15px; text-align: center; border-bottom: 1px solid var(--rose); background: white; position: sticky; top: 0; z-index: 100; }
         .logo { max-width: 140px; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        
-        /* VITRINE */
         .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .produto-card { border: 1px solid var(--nude); border-radius: 12px; padding: 12px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
-        .produto-card:hover { border-color: var(--rose); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .produto-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #fdfdfd; }
-        .marca-tag { font-size: 0.6rem; text-transform: uppercase; color: var(--dourado-dark); font-weight: bold; letter-spacing: 1px; margin-bottom: 4px; }
-        .produto-nome { font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; min-height: 40px; color: #333; }
-        .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; }
-        .btn-add { background: var(--dourado); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; }
-
-        /* CARRINHO */
-        .cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark); color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.25); z-index: 999; display: flex; align-items: center; gap: 10px; font-weight: bold; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 95%; max-width: 450px; max-height: 90vh; border-radius: 20px; padding: 25px; overflow-y: auto; }
-        
-        .item-checkout { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--nude); }
-        .controles-qtd { display: flex; align-items: center; gap: 12px; }
-        .btn-qtd { background: var(--nude); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: var(--dourado-dark); font-weight: bold; }
-        .btn-remover { color: #cc0000; margin-left: 15px; cursor: pointer; font-size: 1.1rem; }
-
-        .form-group { margin-top: 15px; }
-        .form-group label { display: block; font-size: 0.75rem; color: var(--dourado-dark); font-weight: bold; margin-bottom: 5px; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--rose); border-radius: 8px; font-family: 'Montserrat'; }
-        .btn-finalizar { background: #25d366; color: white; width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: bold; margin-top: 25px; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
-
-        @media (max-width: 480px) { .grid-produtos { grid-template-columns: 1fr 1fr; gap: 10px; } }
+        .produto-card { border: 1px solid var(--nude); border-radius: 12px; padding: 12px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .produto-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .marca-tag { font-size: 0.65rem; text-transform: uppercase; color: var(--dourado-dark); font-weight: bold; }
+        .produto-nome { font-size: 0.85rem; margin: 5px 0; font-weight: 600; min-height: 40px; }
+        .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 10px; font-size: 1.1rem; }
+        .btn-add { background: var(--dourado); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.75rem; font-weight: bold; }
+        .cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark); color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 95%; max-width: 450px; max-height: 85vh; border-radius: 15px; padding: 20px; overflow-y: auto; }
+        .item-checkout { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--nude); }
+        .btn-finalizar { background: #25d366; color: white; width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="1000128161.jpg" alt="VIRTUOSA" class="logo">
+        <img src="1000128161.jpg" alt="Virtuosa" class="logo">
     </header>
 
     <div class="container">
-        <h2 style="text-align: center; margin-bottom: 25px; font-family: 'Playfair Display'; color: var(--dourado-dark); font-size: 1.8rem;">Beleza & Cuidado</h2>
+        <h2 style="text-align: center; margin-bottom: 25px; font-family: 'Playfair Display'; color: var(--dourado-dark);">Beleza & Cuidado</h2>
         <div class="grid-produtos" id="vitrine"></div>
     </div>
 
@@ -61,26 +46,16 @@
     <div class="modal" id="modalCheckout">
         <div class="modal-content">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="font-family: 'Playfair Display'; color: var(--dourado-dark);">Minha Sacola</h3>
-                <i class="fas fa-times" onclick="fecharCheckout()" style="cursor:pointer; font-size: 1.4rem;"></i>
+                <h3>Sua Sacola</h3>
+                <i class="fas fa-times" onclick="fecharCheckout()" style="cursor:pointer"></i>
             </div>
-
             <div id="resumoItens"></div>
-
             <form id="formPedido">
-                <div class="form-group"><label>Nome da Cliente</label><input type="text" id="nome" required placeholder="Como se chama?"></div>
-                <div class="form-group"><label>Endereço de Entrega</label><input type="text" id="endereco" required placeholder="Rua, nº, Bairro"></div>
-                <div class="form-group"><label>Ponto de Referência</label><input type="text" id="referencia" placeholder="Ex: Perto do mercado..."></div>
-                
-                <h4 style="margin-top:20px; font-size: 0.85rem; color: var(--dourado-dark);">Pagamento:</h4>
-                <select id="pagamento" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--rose); margin-top:8px; font-family: 'Montserrat';">
-                    <option value="PIX">PIX (Comprovante via Whats)</option>
-                    <option value="Cartão de Crédito">Cartão de Crédito</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                </select>
-
+                <div style="margin-top:15px;"><label style="font-size:0.8rem; font-weight:bold;">Nome</label><input type="text" id="nome" style="width:100%; padding:8px; margin-top:5px;" required></div>
+                <div style="margin-top:15px;"><label style="font-size:0.8rem; font-weight:bold;">Endereço</label><input type="text" id="endereco" style="width:100%; padding:8px; margin-top:5px;" required></div>
+                <div style="margin-top:15px;"><label style="font-size:0.8rem; font-weight:bold;">Referência</label><input type="text" id="referencia" style="width:100%; padding:8px; margin-top:5px;"></div>
                 <button type="button" class="btn-finalizar" onclick="enviarPedido()">
-                    <i class="fab fa-whatsapp"></i> FINALIZAR PEDIDO
+                    <i class="fab fa-whatsapp"></i> FINALIZAR NO WHATSAPP
                 </button>
             </form>
         </div>
@@ -88,16 +63,16 @@
 
     <script>
         const produtos = [
-            { id: 1, marca: "Natura", nome: "Ilía Eau de Parfum Clássico - 50ml", preco: 174.90, img: "https://static.natura.com/sites/default/files/styles/medium/public/products/44444_1.jpg" },
-            { id: 2, marca: "Natura", nome: "Ilía Plena Eau de Parfum - 50ml", preco: 174.90, img: "https://static.natura.com/sites/default/files/styles/medium/public/products/109040_1.jpg" },
-            { id: 3, marca: "Natura", nome: "Ilía Completa Eau de Parfum - 50ml", preco: 174.90, img: "https://static.natura.com/sites/default/files/styles/medium/public/products/123456_1.jpg" },
-            { id: 4, marca: "Natura", nome: "Sabonete Líquido Tododia - 300ml", preco: 37.90, img: "https://static.natura.com/sites/default/files/styles/medium/public/products/70001_1.jpg" },
-            { id: 5, marca: "Natura", nome: "Máscara Capilar Tododia - 250ml", preco: 42.90, img: "https://static.natura.com/sites/default/files/styles/medium/public/products/80001_1.jpg" },
-            { id: 6, marca: "O Boticário", nome: "Boti Baby Colônia do Sol - 100ml", preco: 84.90, img: "https://res.cloudinary.com/beleza-na-web/image/upload/f_auto,fl_progressive,q_auto:eco,w_800/v1/imagens/products/B49772/Colonia-do-Sol-Boti-Baby-100ml.jpg" },
-            { id: 7, marca: "Natura", nome: "Kit Mamãe e Bebê (Sabonete/Cond)", preco: 43.90, img: "https://static.natura.com/sites/default/files/styles/medium/public/products/10001_1.jpg" },
-            { id: 8, marca: "Avon", nome: "Creme Facial Care 5 em 1 - 100g", preco: 22.90, img: "https://www.avon.com.br/arquivos/ids/123456/creme-care.jpg" },
-            { id: 9, marca: "Avon", nome: "Desodorante em Creme Avon - 50g", preco: 12.90, img: "https://www.avon.com.br/arquivos/ids/654321/desodorante.jpg" },
-            { id: 10, marca: "Avon", nome: "Sabonete Líquido Íntimo - 250ml", preco: 24.90, img: "https://www.avon.com.br/arquivos/ids/987654/intimate.jpg" }
+            { id: 1, marca: "Natura", nome: "Ilía Clássico - 50ml", preco: 174.90, img: "ilia_classico.jpg" },
+            { id: 2, marca: "Natura", nome: "Ilía Plena - 50ml", preco: 174.90, img: "ilia_plena.jpg" },
+            { id: 3, marca: "Natura", nome: "Ilía Completa - 50ml", preco: 174.90, img: "ilia_completa.jpg" },
+            { id: 4, marca: "Natura", nome: "Sabonete Líquido Tododia - 300ml", preco: 37.90, img: "sabonete_tododia.jpg" },
+            { id: 5, marca: "Natura", nome: "Máscara Capilar Tododia - 250ml", preco: 42.90, img: "mascara_tododia.jpg" },
+            { id: 6, marca: "O Boticário", nome: "Boti Baby Colônia do Sol - 100ml", preco: 84.90, img: "boti_baby.jpg" },
+            { id: 7, marca: "Natura", nome: "Kit Mamãe e Bebê", preco: 43.90, img: "mamae_bebe.jpg" },
+            { id: 8, marca: "Avon", nome: "Creme Facial Care 5 em 1", preco: 22.90, img: "avon_care.jpg" },
+            { id: 9, marca: "Avon", nome: "Desodorante em Creme Avon", preco: 12.90, img: "desodorante_avon.jpg" },
+            { id: 10, marca: "Avon", nome: "Sabonete Líquido Íntimo", preco: 24.90, img: "intimo_avon.jpg" }
         ];
 
         let sacola = {};
@@ -105,15 +80,11 @@
         function renderVitrine() {
             document.getElementById('vitrine').innerHTML = produtos.map(p => `
                 <div class="produto-card">
-                    <div>
-                        <img src="${p.img}" class="produto-img">
-                        <div class="marca-tag">${p.marca}</div>
-                        <div class="produto-nome">${p.nome}</div>
-                    </div>
-                    <div>
-                        <div class="produto-preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
-                        <button class="btn-add" onclick="addSacola(${p.id})">ADICIONAR</button>
-                    </div>
+                    <img src="${p.img}" class="produto-img">
+                    <div class="marca-tag">${p.marca}</div>
+                    <div class="produto-nome">${p.nome}</div>
+                    <div class="produto-preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+                    <button class="btn-add" onclick="addSacola(${p.id})">ADICIONAR</button>
                 </div>
             `).join('');
         }
@@ -122,21 +93,6 @@
             if (sacola[id]) { sacola[id].qtd += 1; } 
             else { const p = produtos.find(prod => prod.id === id); sacola[id] = { ...p, qtd: 1 }; }
             atualizarBadge();
-        }
-
-        function mudarQtd(id, delta) {
-            if (sacola[id]) {
-                sacola[id].qtd += delta;
-                if (sacola[id].qtd <= 0) delete sacola[id];
-                atualizarBadge();
-                abrirCheckout();
-            }
-        }
-
-        function removerItem(id) {
-            delete sacola[id];
-            atualizarBadge();
-            abrirCheckout();
         }
 
         function atualizarBadge() {
@@ -148,21 +104,10 @@
 
         function abrirCheckout() {
             const resumo = document.getElementById('resumoItens');
-            const itensArray = Object.values(sacola);
-            if(itensArray.length === 0) { fecharCheckout(); return; }
-
-            resumo.innerHTML = itensArray.map(item => `
+            resumo.innerHTML = Object.values(sacola).map(item => `
                 <div class="item-checkout">
-                    <div style="flex-grow: 1;">
-                        <div class="item-nome" style="font-size: 0.85rem;">${item.nome}</div>
-                        <div style="font-size:0.75rem; color:var(--dourado-dark)">R$ ${item.preco.toFixed(2).replace('.', ',')} un.</div>
-                    </div>
-                    <div class="controles-qtd">
-                        <button class="btn-qtd" onclick="mudarQtd(${item.id}, -1)">-</button>
-                        <span style="font-weight:bold">${item.qtd}</span>
-                        <button class="btn-qtd" onclick="mudarQtd(${item.id}, 1)">+</button>
-                    </div>
-                    <i class="fas fa-trash-alt btn-remover" onclick="removerItem(${item.id})"></i>
+                    <div><b>${item.qtd}x</b> ${item.nome}</div>
+                    <div>R$ ${(item.preco * item.qtd).toFixed(2)}</div>
                 </div>
             `).join('');
             document.getElementById('modalCheckout').style.display = 'flex';
@@ -173,23 +118,13 @@
         function enviarPedido() {
             const nome = document.getElementById('nome').value;
             const endereco = document.getElementById('endereco').value;
-            const ref = document.getElementById('referencia').value;
-            const pag = document.getElementById('pagamento').value;
-            if(!nome || !endereco) return alert("Por favor, preencha os dados de entrega.");
+            if(!nome || !endereco) return alert("Preencha os dados!");
 
-            let total = 0;
-            let texto = `*NOVO PEDIDO - VIRTUOSA*%0A---------------------------%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Ref:* ${ref}%0A---------------------------%0A*ITENS:*%0A`;
-            
+            let texto = `*NOVO PEDIDO - VIRTUOSA*%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A%0A*ITENS:*%0A`;
             Object.values(sacola).forEach(item => {
-                texto += `• ${item.qtd}x ${item.nome} (R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')})%0A`;
-                total += (item.preco * item.qtd);
+                texto += `• ${item.qtd}x ${item.nome}%0A`;
             });
-
-            texto += `---------------------------%0A*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*%0A*Pagamento:* ${pag}`;
-            
-            // NÚMERO CONFIGURADO
-            const numeroWhats = "5589999263346"; 
-            window.open(`https://wa.me/${numeroWhats}?text=${texto}`);
+            window.open(`https://wa.me/5589999263346?text=${texto}`);
         }
 
         renderVitrine();
