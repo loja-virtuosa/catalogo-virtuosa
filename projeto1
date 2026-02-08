@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUOSA | Catálogo Online</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --dourado: #C5A059;
+            --dourado-dark: #A68546;
+            --nude: #F9F1F0;
+            --rose: #EAD8D3;
+            --branco: #FFFFFF;
+            --texto: #4A4A4A;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: var(--branco); }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        /* HEADER */
+        header { 
+            padding: 15px; text-align: center; border-bottom: 1px solid var(--rose); 
+            background: white; position: sticky; top: 0; z-index: 100;
+        }
+        .logo { max-width: 150px; }
+
+        /* VITRINE */
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        
+        .produto-card { border: 1px solid var(--nude); border-radius: 10px; padding: 10px; text-align: center; }
+        .produto-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
+        .produto-nome { font-size: 0.9rem; margin: 10px 0 5px; font-weight: 600; }
+        .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 10px; }
+        
+        .btn-add { 
+            background: var(--dourado); color: white; border: none; padding: 8px 12px; 
+            border-radius: 5px; cursor: pointer; width: 100%; font-size: 0.8rem;
+            transition: 0.3s;
+        }
+        .btn-add:hover { background: var(--dourado-dark); }
+
+        /* SACOLA FLUTUANTE */
+        .cart-badge {
+            position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark);
+            color: white; padding: 15px 20px; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* MODAL DE CHECKOUT */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; width: 90%; max-width: 500px; max-height: 90vh;
+            border-radius: 15px; padding: 25px; overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        /* FORMULÁRIO */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: var(--dourado-dark); font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px; border: 1px solid var(--rose); border-radius: 5px; font-family: 'Montserrat';
+        }
+        
+        .metodo-pagamento {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;
+        }
+        .pay-option {
+            border: 1px solid var(--rose); padding: 10px; text-align: center; border-radius: 5px; cursor: pointer;
+        }
+        .pay-option.active { border-color: var(--dourado); background: var(--nude); }
+
+        .btn-finalizar {
+            background: #25d366; color: white; width: 100%; padding: 15px; border: none;
+            border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer;
+        }
+
+        /* RESUMO DA SACOLA NO MODAL */
+        .resumo-itens { border-bottom: 1px solid var(--nude); margin-bottom: 20px; padding-bottom: 10px; }
+        .item-checkout { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="1000128161.jpg" alt="Virtuosa" class="logo">
+    </header>
+
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--dourado-dark);">Catálogo Exclusivo</h2>
+        
+        <div class="grid-produtos" id="vitrine">
+            </div>
+    </div>
+
+    <div class="cart-badge" onclick="abrirCheckout()">
+        <i class="fas fa-shopping-bag"></i>
+        <span id="cart-count">0</span> Itens - R$ <span id="cart-total">0,00</span>
+    </div>
+
+    <div class="modal" id="modalCheckout">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sua Sacola</h3>
+                <i class="fas fa-times" onclick="fecharCheckout()" style="cursor: pointer;"></i>
+            </div>
+
+            <div class="resumo-itens" id="resumoItens">
+                </div>
+
+            <form id="formPedido">
+                <h4 style="margin-bottom: 15px; border-bottom: 1px solid var(--nude);">Dados de Entrega</h4>
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="nome" required placeholder="Como podemos te chamar?">
+                </div>
+                <div class="form-group">
+                    <label>Endereço Completo</label>
+                    <input type="text" id="endereco" required placeholder="Rua, número e bairro">
+                </div>
+                <div class="form-group">
+                    <label>Ponto de Referência</label>
+                    <input type="text" id="referencia" placeholder="Ex: Próximo à padaria...">
+                </div>
+
+                <h4 style="margin-bottom: 10px; margin-top: 20px;">Pagamento</h4>
+                <div class="metodo-pagamento">
+                    <div class="pay-option active" id="payPix" onclick="setPagamento('PIX')">
+                        <i class="fas fa-pix"></i><br>PIX
+                    </div>
+                    <div class="pay-option" id="payCartao" onclick="setPagamento('Cartão de Crédito')">
+                        <i class="fas fa-credit-card"></i><br>Cartão
+                    </div>
+                </div>
+
+                <div id="infoPix" style="margin-top: 15px; font-size: 0.8rem; background: var(--suave); padding: 10px; border-radius: 5px;">
+                    <strong>Chave PIX:</strong> sua@chaveaqui.com <br>
+                    <small>(Você enviará o comprovante pelo WhatsApp)</small>
+                </div>
+
+                <button type="button" class="btn-finalizar" onclick="enviarPedido()">
+                    <i class="fab fa-whatsapp"></i> ENVIAR PEDIDO
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // BANCO DE DADOS DE PRODUTOS (Simples para o protótipo)
+        const produtos = [
+            { id: 1, nome: "Sérum Facial Gold", preco: 129.90, img: "https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?w=400" },
+            { id: 2, nome: "Conjunto Renda Rosé", preco: 89.00, img: "https://images.unsplash.com/photo-1612444530582-fc66183b16f7?w=400" },
+            { id: 3, nome: "Body Elegance Nude", preco: 110.00, img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400" },
+            { id: 4, nome: "Óleo Corporal Silk", preco: 55.00, img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400" }
+        ];
+
+        let sacola = [];
+        let pagamentoEscolhido = "PIX";
+
+        // RENDERIZAR VITRINE
+        function renderVitrine() {
+            const vitrine = document.getElementById('vitrine');
+            vitrine.innerHTML = produtos.map(p => `
+                <div class="produto-card">
+                    <img src="${p.img}" class="produto-img">
+                    <div class="produto-nome">${p.nome}</div>
+                    <div class="produto-preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+                    <button class="btn-add" onclick="addSacola(${p.id})">Adicionar</button>
+                </div>
+            `).join('');
+        }
+
+        // LÓGICA DA SACOLA
+        function addSacola(id) {
+            const prod = produtos.find(p => p.id === id);
+            sacola.push(prod);
+            atualizarBadge();
+        }
+
+        function atualizarBadge() {
+            document.getElementById('cart-count').innerText = sacola.length;
+            const total = sacola.reduce((acc, curr) => acc + curr.preco, 0);
+            document.getElementById('cart-total').innerText = total.toFixed(2).replace('.', ',');
+        }
+
+        // CONTROLE DO MODAL
+        function abrirCheckout() {
+            if(sacola.length === 0) return alert("Sua sacola está vazia!");
+            
+            const resumo = document.getElementById('resumoItens');
+            resumo.innerHTML = sacola.map(i => `
+                <div class="item-checkout">
+                    <span>${i.nome}</span>
+                    <span>R$ ${i.preco.toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('modalCheckout').style.display = 'flex';
+        }
+
+        function fecharCheckout() {
+            document.getElementById('modalCheckout').style.display = 'none';
+        }
+
+        function setPagamento(tipo) {
+            pagamentoEscolhido = tipo;
+            document.getElementById('payPix').classList.toggle('active', tipo === 'PIX');
+            document.getElementById('payCartao').classList.toggle('active', tipo === 'Cartão de Crédito');
+            document.getElementById('infoPix').style.display = tipo === 'PIX' ? 'block' : 'none';
+        }
+
+        // ENVIO PARA WHATSAPP
+        function enviarPedido() {
+            const nome = document.getElementById('nome').value;
+            const endereco = document.getElementById('endereco').value;
+            const referencia = document.getElementById('referencia').value;
+
+            if(!nome || !endereco) return alert("Por favor, preencha nome e endereço.");
+
+            let textoItens = sacola.map(i => `- ${i.nome} (R$ ${i.preco.toFixed(2)})`).join('%0A');
+            const total = sacola.reduce((acc, curr) => acc + curr.preco, 0);
+
+            const mensagem = `*NOVO PEDIDO - VIRTUOSA*%0A%0A` +
+                `*CLIENTE:* ${nome}%0A` +
+                `*ENDEREÇO:* ${endereco}%0A` +
+                `*REF:* ${referencia}%0A%0A` +
+                `*ITENS:*%0A${textoItens}%0A%0A` +
+                `*TOTAL:* R$ ${total.toFixed(2)}%0A` +
+                `*PAGAMENTO:* ${pagamentoEscolhido}`;
+
+            const numeroWhats = "55XXXXXXXXXXX"; // COLOQUE SEU NÚMERO AQUI
+            window.open(`https://wa.me/${numeroWhats}?text=${mensagem}`);
+        }
+
+        renderVitrine();
+    </script>
+</body>
+</html>
