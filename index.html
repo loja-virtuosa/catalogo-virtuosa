@@ -57,18 +57,18 @@
         .btn-qtd { background: var(--nude); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: var(--dourado-dark); font-weight: bold; }
         .btn-remover { color: #cc0000; margin-left: 10px; cursor: pointer; }
 
-        .total-geral {
-            margin-top: 20px; padding: 15px; background: var(--nude); 
-            border-radius: 8px; text-align: right; font-weight: bold; 
-            color: var(--dourado-dark); font-size: 1.1rem;
-        }
+        .total-geral { margin-top: 20px; padding: 15px; background: var(--nude); border-radius: 8px; text-align: right; font-weight: bold; color: var(--dourado-dark); font-size: 1.1rem; }
+
+        /* ÁREA PIX */
+        .pix-area { display: none; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
+        .pix-chave { font-family: monospace; font-size: 1.1rem; background: white; padding: 8px; border-radius: 4px; border: 1px dashed #22c55e; margin: 10px 0; display: block; }
+        .btn-copiar { background: #22c55e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
+        .aviso-comprovante { font-size: 0.75rem; color: #15803d; margin-top: 8px; font-style: italic; }
 
         .form-group { margin-top: 15px; }
         .form-group label { display: block; font-size: 0.7rem; color: var(--dourado-dark); font-weight: bold; margin-bottom: 5px; }
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--rose); border-radius: 8px; font-family: 'Montserrat'; font-size: 0.9rem; }
         .btn-finalizar { background: #25d366; color: white; width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: bold; margin-top: 25px; cursor: pointer; font-size: 1rem; }
-
-        @media (max-width: 480px) { .grid-produtos { grid-template-columns: 1fr 1fr; gap: 10px; } }
     </style>
 </head>
 <body>
@@ -112,14 +112,26 @@
                 <div class="form-group"><label>Nome da Cliente</label><input type="text" id="nome" required placeholder="Digite seu nome"></div>
                 <div class="form-group"><label>Endereço de Entrega</label><input type="text" id="endereco" required placeholder="Rua, número, bairro"></div>
                 <div class="form-group"><label>Ponto de Referência</label><input type="text" id="referencia" placeholder="Ex: Próximo à padaria"></div>
+                
                 <div class="form-group">
                     <label>Forma de Pagamento</label>
-                    <select id="pagamento">
+                    <select id="pagamento" onchange="verificarPix()">
                         <option value="PIX">PIX</option>
                         <option value="Cartão">Cartão de Crédito</option>
                         <option value="Dinheiro">Dinheiro</option>
                     </select>
                 </div>
+
+                <div id="area-pix" class="pix-area">
+                    <div style="font-size:0.8rem; font-weight:bold; color:#15803d;">Chave Pix (Celular):</div>
+                    <span class="pix-chave" id="chavePix">89999263346</span>
+                    <button type="button" class="btn-copiar" onclick="copiarPix()">COPIAR CHAVE</button>
+                    <div style="font-size:0.75rem; color:#555;">Nome: <b>ILANA FERNANDA RODRIGUES</b></div>
+                    <div class="aviso-comprovante">
+                        <i class="fas fa-paperclip"></i> Ao clicar em Finalizar, envie o comprovante na conversa do WhatsApp.
+                    </div>
+                </div>
+
                 <button type="button" class="btn-finalizar" onclick="enviarPedido()">
                     <i class="fab fa-whatsapp"></i> FINALIZAR NO WHATSAPP
                 </button>
@@ -136,17 +148,14 @@
             { id: 4, marca: "Natura", nome: "Sabonete Tododia Macadâmia", preco: 49.90, img: "sabonete_tododia.jpeg" },
             { id: 5, marca: "Natura", nome: "Máscara Capilar Tododia", preco: 42.90, img: "mascara_tododia.jpeg" },
             { id: 6, marca: "Natura", nome: "Kit Mamãe e Bebê", preco: 43.90, img: "mamae_bebe.jpeg" },
-            
             // BOTICÁRIO
             { id: 7, marca: "O Boticário", nome: "Boti Baby Colônia do Sol 100ml", preco: 95.90, img: "boti_baby.jpeg" },
             { id: 8, marca: "O Boticário", nome: "Malbec Desodorante Colônia 100ml", preco: 209.90, img: "malbec.jpeg" },
-            
             // AVON / EUDORA
             { id: 9, marca: "Eudora", nome: "Batom Matte Tint", preco: 44.90, img: "batom_eudora.jpeg" },
             { id: 10, marca: "Avon", nome: "Creme Facial Care 5 em 1", preco: 22.90, img: "avon_care.jpeg" },
             { id: 11, marca: "Avon", nome: "Desodorante em Creme Avon", preco: 12.90, img: "desodorante_avon.jpeg" },
             { id: 12, marca: "Avon", nome: "Sabonete Líquido Íntimo", preco: 24.90, img: "intimo_avon.jpeg" },
-
             // LINGERIE
             { id: 13, marca: "Lingerie", nome: "Body Corset Olivia Vermelho", preco: 85.00, img: "olivia.jpeg" },
             { id: 14, marca: "Lingerie", nome: "Conjunto Lorena Castanho", preco: 69.90, img: "lorena.jpeg" },
@@ -195,19 +204,9 @@
         }
 
         function mudarQtd(id, delta) {
-            if (sacola[id]) {
-                sacola[id].qtd += delta;
-                if (sacola[id].qtd <= 0) delete sacola[id];
-                atualizarBadge();
-                abrirCheckout();
-            }
+            if (sacola[id]) { sacola[id].qtd += delta; if (sacola[id].qtd <= 0) delete sacola[id]; atualizarBadge(); abrirCheckout(); }
         }
-
-        function removerItem(id) {
-            delete sacola[id];
-            atualizarBadge();
-            abrirCheckout();
-        }
+        function removerItem(id) { delete sacola[id]; atualizarBadge(); abrirCheckout(); }
 
         function atualizarBadge() {
             let totalItens = 0; let precoTotal = 0;
@@ -220,11 +219,8 @@
             const resumo = document.getElementById('resumoItens');
             const totalDisplay = document.getElementById('totalGeralModal');
             const itensArray = Object.values(sacola);
-            
             if(itensArray.length === 0) { fecharCheckout(); return; }
-
             let grandTotal = 0;
-
             resumo.innerHTML = itensArray.map(item => {
                 let subtotal = item.preco * item.qtd;
                 grandTotal += subtotal;
@@ -244,12 +240,24 @@
                     <i class="fas fa-trash-alt btn-remover" onclick="removerItem(${item.id})"></i>
                 </div>
             `}).join('');
-
             totalDisplay.innerText = `Total Geral: R$ ${grandTotal.toFixed(2).replace('.', ',')}`;
             document.getElementById('modalCheckout').style.display = 'flex';
+            verificarPix(); // Garante que o estado do PIX esteja correto ao abrir
         }
 
         function fecharCheckout() { document.getElementById('modalCheckout').style.display = 'none'; }
+
+        function verificarPix() {
+            const pag = document.getElementById('pagamento').value;
+            const areaPix = document.getElementById('area-pix');
+            if (pag === 'PIX') { areaPix.style.display = 'block'; } 
+            else { areaPix.style.display = 'none'; }
+        }
+
+        function copiarPix() {
+            const chave = document.getElementById('chavePix').innerText;
+            navigator.clipboard.writeText(chave).then(() => { alert("Chave Pix copiada!"); });
+        }
 
         function enviarPedido() {
             const nome = document.getElementById('nome').value;
@@ -268,6 +276,8 @@
             });
 
             texto += `---------------------------%0A*TOTAL GERAL: R$ ${totalGeral.toFixed(2).replace('.', ',')}*%0A*Pagamento:* ${pag}`;
+            
+            if(pag === 'PIX') { texto += `%0A%0A⚠️ *Atenção:* Comprovante enviado em anexo.`; }
             
             window.open(`https://wa.me/5589999263346?text=${texto}`);
         }
