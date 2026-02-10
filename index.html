@@ -141,27 +141,31 @@
 
     <script>
         const produtos = [
-            // NATURA
+            // COSMÉTICOS (Já existentes)
             { id: 1, marca: "Natura", nome: "Ilía Clássico - 50ml", preco: 199.90, img: "ilia_classico.jpeg" },
             { id: 2, marca: "Natura", nome: "Ilía Plena - 50ml", preco: 199.90, img: "ilia_plena.jpeg" },
             { id: 3, marca: "Natura", nome: "Ilía Completa - 50ml", preco: 199.90, img: "ilia_completa.jpeg" },
             { id: 4, marca: "Natura", nome: "Sabonete Tododia Macadâmia", preco: 49.90, img: "sabonete_tododia.jpeg" },
             { id: 5, marca: "Natura", nome: "Máscara Capilar Tododia", preco: 42.90, img: "mascara_tododia.jpeg" },
             { id: 6, marca: "Natura", nome: "Kit Mamãe e Bebê", preco: 43.90, img: "mamae_bebe.jpeg" },
-            // BOTICÁRIO
             { id: 7, marca: "O Boticário", nome: "Boti Baby Colônia do Sol 100ml", preco: 95.90, img: "boti_baby.jpeg" },
             { id: 8, marca: "O Boticário", nome: "Malbec Desodorante Colônia 100ml", preco: 209.90, img: "malbec.jpeg" },
-            // AVON / EUDORA
             { id: 9, marca: "Eudora", nome: "Batom Matte Tint", preco: 44.90, img: "batom_eudora.jpeg" },
             { id: 10, marca: "Avon", nome: "Creme Facial Care 5 em 1", preco: 22.90, img: "avon_care.jpeg" },
             { id: 11, marca: "Avon", nome: "Desodorante em Creme Avon", preco: 12.90, img: "desodorante_avon.jpeg" },
             { id: 12, marca: "Avon", nome: "Sabonete Líquido Íntimo", preco: 24.90, img: "intimo_avon.jpeg" },
-            // LINGERIE
-            { id: 13, marca: "Lingerie", nome: "Body Corset Olivia Vermelho", preco: 85.00, img: "olivia.jpeg" },
-            { id: 14, marca: "Lingerie", nome: "Conjunto Lorena Castanho", preco: 69.90, img: "lorena.jpeg" },
-            { id: 15, marca: "Lingerie", nome: "Conjunto Paradise Branco", preco: 75.00, img: "paradise.jpeg" },
-            { id: 16, marca: "Lingerie", nome: "Conjunto Eliza Vermelho", preco: 59.90, img: "eliza.jpeg" },
-            { id: 17, marca: "Lingerie", nome: "Calcinha Thais Fio Duplo", preco: 15.00, img: "thais.jpeg" }
+
+            // NOVAS LINGERIES (Lista Atualizada)
+            { id: 13, marca: "Lingerie", nome: "Calcinha Pérolas (Harmonia M)", preco: 24.99, img: "perolas.jpeg" },
+            { id: 14, marca: "Lingerie", nome: "Calcinha Thais Fio Duplo (Variadas)", preco: 15.00, img: "thais.jpeg" },
+            { id: 15, marca: "Lingerie", nome: "Conj. Doce Sedução Saia Pink (G)", preco: 90.00, img: "doce_seducao.jpeg" },
+            { id: 16, marca: "Lingerie", nome: "Conjunto Puro Preto (38 ao 42)", preco: 79.90, img: "puro_preto.jpeg" },
+            { id: 17, marca: "Lingerie", nome: "Conjunto Paradise Callas (M)", preco: 75.00, img: "paradise_callas.jpeg" },
+            { id: 18, marca: "Lingerie", nome: "Conjunto Tentação Chronos (G)", preco: 79.90, img: "tentacao.jpeg" },
+            { id: 19, marca: "Lingerie", nome: "Body Corset Olivia Vermelho (G)", preco: 85.00, img: "olivia.jpeg" },
+            { id: 20, marca: "Lingerie", nome: "Conjunto Lorena Castanho (M)", preco: 69.90, img: "lorena_castanho.jpeg" },
+            { id: 21, marca: "Lingerie", nome: "Conjunto Eliza Vermelho (M)", preco: 59.90, img: "eliza.jpeg" },
+            { id: 22, marca: "Lingerie", nome: "Conjunto Lorena Vermelho (G)", preco: 69.90, img: "lorena_vermelho.jpeg" }
         ];
 
         let sacola = {};
@@ -242,7 +246,7 @@
             `}).join('');
             totalDisplay.innerText = `Total Geral: R$ ${grandTotal.toFixed(2).replace('.', ',')}`;
             document.getElementById('modalCheckout').style.display = 'flex';
-            verificarPix(); // Garante que o estado do PIX esteja correto ao abrir
+            verificarPix();
         }
 
         function fecharCheckout() { document.getElementById('modalCheckout').style.display = 'none'; }
