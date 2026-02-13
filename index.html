@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS VISUAIS (V21 - MASONRY) --- */
+        /* --- ESTILOS VISUAIS (V22 - GRID ROBUSTO) --- */
         :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: var(--branco); -webkit-tap-highlight-color: transparent; }
@@ -29,26 +29,25 @@
 
         .container { max-width: 1000px; margin: 0 auto; padding: 15px 20px 100px; }
         
-        /* --- NOVO LAYOUT (MASONRY) --- */
-        .grid-produtos {
-            column-count: 2; /* 2 colunas no celular */
-            column-gap: 15px;
+        /* GRID DE VERDADE (Evita bugs visuais) */
+        .grid-produtos { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 2 Colunas no celular */
+            gap: 15px; 
+            align-items: start; /* Impede que estiquem */
             opacity: 1; transition: opacity 0.4s ease;
         }
-        @media (min-width: 768px) { .grid-produtos { column-count: 3; } } /* 3 colunas em tablets */
-        @media (min-width: 1024px) { .grid-produtos { column-count: 4; } } /* 4 colunas em PC */
+        @media (min-width: 768px) { .grid-produtos { grid-template-columns: repeat(4, 1fr); } }
 
-        /* O Card agora é um bloco que não quebra */
         .produto-card { 
-            break-inside: avoid; /* Evita que o card seja cortado entre colunas */
-            margin-bottom: 15px; /* Espaço entre os cards verticais */
             border: 1px solid var(--nude); border-radius: 12px; padding: 12px; 
             text-align: center; display: flex; flex-direction: column; 
-            background: #fff; position: relative; 
+            background: #fff; position: relative; height: 100%;
         }
         
         .produto-img { width: 100%; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #fdfdfd; }
-        /* As classes de formato continuam funcionando */
+        
+        /* FORMATOS CONTROLADOS PELO CSS */
         .ratio-quadrado { aspect-ratio: 1 / 1; }
         .ratio-retrato { aspect-ratio: 3 / 4; }
         .ratio-paisagem { aspect-ratio: 4 / 3; }
@@ -56,12 +55,14 @@
         .marca-tag { font-size: 0.6rem; text-transform: uppercase; color: var(--dourado-dark); font-weight: bold; margin-bottom: 4px; }
         .produto-nome { font-size: 0.8rem; margin-bottom: 8px; font-weight: 600; min-height: 35px; line-height: 1.2; }
         .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 12px; font-size: 1rem; }
-        .btn-add { background: var(--dourado); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; width: 100%; transition: 0.2s; margin-top: auto; /* Empurra para o final */ }
+        
+        /* Botão sempre no final */
+        .btn-add { background: var(--dourado); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; width: 100%; transition: 0.2s; margin-top: auto; }
         .btn-add:active { transform: scale(0.95); }
         
         .btn-edit { position: absolute; top: 5px; right: 5px; background: #333; color: white; border-radius: 50%; width: 25px; height: 25px; font-size: 0.7rem; cursor: pointer; display: none; border: none; z-index: 10; }
 
-        /* Restante dos estilos (Sacola, Modais) mantidos */
+        /* Restante do CSS igual */
         .cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark); color: white; padding: 15px 20px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: bold; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; width: 95%; max-width: 450px; max-height: 90vh; border-radius: 20px; padding: 25px; overflow-y: auto; }
@@ -179,7 +180,7 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO FIREBASE
+        // CONFIGURAÇÃO FIREBASE (Chaves Originais)
         const firebaseConfig = {
             apiKey: "AIzaSyAZEhg5sWCrDYoiL67t_1jvG-L454brf44",
             authDomain: "virtuosa-catalogo.firebaseapp.com",
@@ -205,7 +206,7 @@
             renderVitrine();
         });
 
-        // RENDERIZAÇÃO (MASONRY)
+        // RENDERIZAÇÃO (Volta para Grid Padrão com Flex)
         function renderVitrine(categoria) {
             const vitrine = document.getElementById('vitrine');
             vitrine.style.opacity = '0';
@@ -249,7 +250,7 @@
                 isAdmin = true;
                 document.getElementById('btnAdminPublico').style.display = 'block';
                 document.getElementById('btnSairAdmin').style.display = 'block';
-                alert("MODO ADMIN: Layout Masonry Ativado!");
+                alert("MODO ADMIN ATIVADO!");
                 renderVitrine();
             }
         };
