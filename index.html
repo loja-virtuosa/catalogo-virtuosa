@@ -22,6 +22,10 @@
         .tab-btn { background: none; border: 1px solid var(--rose); padding: 8px 18px; border-radius: 20px; font-size: 0.75rem; color: var(--texto); transition: 0.3s; cursor: pointer; }
         .tab-btn.active { background: var(--dourado); color: white; border-color: var(--dourado); font-weight: 600; }
         
+        /* Botões Especiais de Admin */
+        .btn-admin-painel { display: none; color: #22c55e; border-color: #22c55e; font-weight: bold; }
+        .btn-admin-sair { display: none; color: #ef4444; border-color: #ef4444; font-weight: bold; }
+
         .container { max-width: 1000px; margin: 0 auto; padding: 15px 20px 100px; }
         .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; transition: opacity 0.4s ease; }
         
@@ -66,7 +70,9 @@
         <button class="tab-btn" onclick="filtrar('O Boticário')">Boticário</button>
         <button class="tab-btn" onclick="filtrar('Eudora')">Eudora</button>
         <button class="tab-btn" onclick="filtrar('Lingerie')">Lingerie</button>
-        <button class="tab-btn" id="btnAdminPublico" onclick="abrirAdmin()" style="display:none; color:red; border-color:red;">+ ADMIN</button>
+        
+        <button class="tab-btn btn-admin-painel" id="btnAdminPublico" onclick="abrirAdmin()">+ NOVO</button>
+        <button class="tab-btn btn-admin-sair" id="btnSairAdmin" onclick="sairAdmin()">SAIR</button>
     </div>
 
     <div class="container">
@@ -122,7 +128,7 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO FIREBASE DO GUIMEL
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAZEhg5sWCrDYoiL67t_1jvG-L454brf44",
             authDomain: "virtuosa-catalogo.firebaseapp.com",
@@ -153,126 +159,4 @@
             const filtrados = categoria === 'todos' ? produtosCache : produtosCache.filter(p => p.marca === categoria);
             
             if(filtrados.length === 0) {
-                vitrine.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 20px;">Use o modo Admin para cadastrar os primeiros produtos!</p>';
-                return;
-            }
-
-            vitrine.innerHTML = filtrados.map(p => `
-                <div class="produto-card">
-                    ${isAdmin ? `<button class="btn-edit" style="display:block" onclick="editarProduto('${p.id}')"><i class="fas fa-pen"></i></button>` : ''}
-                    <img src="${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/150'">
-                    <div class="marca-tag">${p.marca}</div>
-                    <div class="produto-nome">${p.nome}</div>
-                    <div class="produto-preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
-                    <button class="btn-add" onclick="addSacola('${p.id}')">ADICIONAR</button>
-                </div>
-            `).join('');
-        }
-
-        // Segredo: 5 Cliques na logo ativam o Admin
-        let clicks = 0;
-        document.getElementById('logoClick').onclick = () => {
-            clicks++;
-            if(clicks === 5) {
-                isAdmin = true;
-                document.getElementById('btnAdminPublico').style.display = 'block';
-                alert("ACESSO ADMINISTRADOR LIBERADO!");
-                renderVitrine();
-            }
-        };
-
-        function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; limparAdmin(); }
-        function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function salvarProduto() {
-            const id = document.getElementById('editId').value;
-            const dados = {
-                marca: document.getElementById('admMarca').value,
-                nome: document.getElementById('admNome').value,
-                preco: parseFloat(document.getElementById('admPreco').value),
-                img: document.getElementById('admImg').value
-            };
-            if(id) {
-                db.collection("produtos").doc(id).update(dados).then(() => { fecharModal('modalAdmin'); });
-            } else {
-                db.collection("produtos").add(dados).then(() => { fecharModal('modalAdmin'); });
-            }
-        }
-
-        function editarProduto(id) {
-            const p = produtosCache.find(x => x.id === id);
-            document.getElementById('editId').value = id;
-            document.getElementById('admMarca').value = p.marca;
-            document.getElementById('admNome').value = p.nome;
-            document.getElementById('admPreco').value = p.preco;
-            document.getElementById('admImg').value = p.img;
-            document.getElementById('btnDeletar').style.display = 'block';
-            document.getElementById('modalAdmin').style.display = 'flex';
-        }
-
-        function deletarProduto() {
-            if(confirm("Deseja excluir este item?")) {
-                db.collection("produtos").doc(document.getElementById('editId').value).delete().then(() => fecharModal('modalAdmin'));
-            }
-        }
-
-        function limparAdmin() {
-            document.getElementById('editId').value = "";
-            document.getElementById('admNome').value = "";
-            document.getElementById('admPreco').value = "";
-            document.getElementById('admImg').value = "";
-            document.getElementById('btnDeletar').style.display = 'none';
-        }
-
-        // Funções de Filtro, Sacola e WhatsApp (Consolidadas)
-        function filtrar(categoria) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                const text = btn.innerText === 'Boticário' ? 'O Boticário' : btn.innerText;
-                btn.classList.toggle('active', text === categoria || (categoria === 'todos' && text === 'Todos'));
-            });
-            renderVitrine(categoria);
-        }
-
-        function addSacola(id) {
-            if (sacola[id]) { sacola[id].qtd += 1; } 
-            else { const p = produtosCache.find(prod => prod.id === id); sacola[id] = { ...p, qtd: 1 }; }
-            atualizarBadge();
-        }
-
-        function atualizarBadge() {
-            let total = 0;
-            Object.values(sacola).forEach(i => total += i.qtd);
-            document.getElementById('cart-count').innerText = total;
-        }
-
-        function abrirCheckout() {
-            const resumo = document.getElementById('resumoItens');
-            const itens = Object.values(sacola);
-            if(itens.length === 0) return alert("Sua sacola está vazia!");
-            let total = 0;
-            resumo.innerHTML = itens.map(i => {
-                total += (i.preco * i.qtd);
-                return `<div class="item-checkout"><div>${i.qtd}x ${i.nome}</div><div>R$ ${(i.preco * i.qtd).toFixed(2)}</div></div>`;
-            }).join('');
-            document.getElementById('totalGeralModal').innerText = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
-            document.getElementById('modalCheckout').style.display = 'flex';
-        }
-
-        function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
-
-        function enviarPedido() {
-            const nome = document.getElementById('nome').value;
-            const end = document.getElementById('endereco').value;
-            if(!nome || !end) return alert("Preencha seus dados!");
-            let msg = `*PEDIDO VIRTUOSA*%0ACliente: ${nome}%0AEnd: ${end}%0A%0A*ITENS:*%0A`;
-            let total = 0;
-            Object.values(sacola).forEach(i => {
-                msg += `${i.qtd}x ${i.nome} (R$ ${(i.preco * i.qtd).toFixed(2)})%0A`;
-                total += (i.preco * i.qtd);
-            });
-            msg += `%0A*TOTAL: R$ ${total.toFixed(2)}*%0A*PGTO:* ${document.getElementById('pagamento').value}`;
-            window.open(`https://wa.me/5589999263346?text=${msg}`);
-        }
-    </script>
-</body>
-</html>
+                vitrine.innerHTML = '<p style="text-align:center; grid-column: 1/-1
