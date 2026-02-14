@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS VISUAIS (V24 - CATEGORIAS DINÂMICAS) --- */
+        /* --- ESTILOS VISUAIS (V24.2 - MOBILE ADMIN FIX) --- */
         :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: #fafafa; -webkit-tap-highlight-color: transparent; }
@@ -22,16 +22,16 @@
 
         .main-wrapper { display: flex; max-width: 1200px; margin: 20px auto; gap: 30px; padding: 0 20px; align-items: flex-start; }
 
-        /* SIDEBAR (MENU) */
+        /* SIDEBAR (MENU DESKTOP) */
         .sidebar { width: 250px; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--rose); position: sticky; top: 90px; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .sidebar-title { font-family: 'Playfair Display', serif; font-weight: bold; margin-bottom: 15px; color: var(--dourado-dark); font-size: 1.1rem; border-bottom: 1px solid var(--rose); padding-bottom: 10px; }
 
         .menu-btn { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 12px 15px; margin-bottom: 8px; border: 1px solid transparent; background: transparent; color: var(--texto); border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; font-weight: 500; }
         .menu-btn:hover { background: var(--nude); color: var(--dourado-dark); }
         .menu-btn.active { background: var(--dourado); color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3); }
-        .menu-btn i { width: 20px; text-align: center; }
+        .menu-btn i { width: 25px; text-align: center; }
 
-        /* Botões Admin */
+        /* Botões Admin (Desktop Default) */
         .admin-section { border-top: 1px dashed var(--rose); margin-top: 15px; padding-top: 15px; display: none; flex-direction: column; gap: 5px; }
         .btn-admin-action { border: 1px dashed #22c55e; color: #166534; }
         .btn-admin-sair { border: 1px dashed #ef4444; color: #991b1b; }
@@ -40,14 +40,42 @@
         .conteudo-produtos { flex-grow: 1; width: 100%; }
         .grid-produtos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; opacity: 1; transition: opacity 0.4s ease; }
 
+        /* --- RESPONSIVIDADE MOBILE (Ajustado na V24.2) --- */
         @media (max-width: 900px) {
             .main-wrapper { flex-direction: column; gap: 15px; margin-top: 10px; }
-            .sidebar { width: 100%; position: sticky; top: 60px; z-index: 90; display: flex; overflow-x: auto; padding: 10px; white-space: nowrap; gap: 10px; border: none; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-            .sidebar-title, .admin-section { display: none !important; } /* Esconde admin e título no mobile sticky */
-            /* Botões Admin no Mobile viram itens da lista horizontal */
-            .mobile-admin-btn { display: none; border: 1px dashed #22c55e; color: #166534; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; margin-right: 10px; }
+            
+            /* Menu horizontal no topo */
+            .sidebar { 
+                width: 100%; position: sticky; top: 60px; z-index: 90; 
+                display: flex; flex-wrap: wrap; /* Permite quebrar linha para o admin */
+                padding: 10px; gap: 10px; border: none; background: white; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05); align-items: center;
+            }
+            
+            /* Contêiner para os botões de categoria rolarem horizontalmente */
+            #listaCategoriasMenu {
+                display: flex; overflow-x: auto; white-space: nowrap; gap: 10px; flex-grow: 1;
+                scrollbar-width: none; /* Firefox */
+            }
+            #listaCategoriasMenu::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+
+            .sidebar-title { display: none !important; }
             
             .menu-btn { width: auto; flex-shrink: 0; background: white; border: 1px solid var(--rose); padding: 8px 16px; font-size: 0.8rem; margin-bottom: 0; border-radius: 50px; }
+            
+            /* Área Admin no Mobile (Quando ativada) */
+            .admin-section {
+                width: 100%;
+                flex-direction: row !important; /* Botões lado a lado */
+                justify-content: space-around;
+                border-top: 1px solid var(--rose);
+                padding-top: 10px; margin-top: 5px;
+                /* O JS vai mudar display:none para display:flex quando logar */
+            }
+            .menu-btn.btn-admin-action, .menu-btn.btn-admin-sair {
+                 font-size: 0.75rem; padding: 8px 12px; flex-grow: 1; justify-content: center;
+            }
+
             .grid-produtos { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         }
 
@@ -105,12 +133,12 @@
             <div class="sidebar-title">Categorias</div>
             <div id="listaCategoriasMenu"></div>
             
-            <div class="admin-section" id="adminPanelDesktop">
-                <button class="menu-btn btn-admin-action" onclick="abrirAdmin()"><i class="fas fa-plus-circle"></i> Novo Produto</button>
-                <button class="menu-btn btn-admin-action" onclick="abrirGestaoCategorias()"><i class="fas fa-tags"></i> Gerenciar Categorias</button>
-                <button class="menu-btn btn-admin-sair" onclick="sairAdmin()"><i class="fas fa-sign-out-alt"></i> Sair Admin</button>
+            <div class="admin-section" id="adminPanel">
+                <button class="menu-btn btn-admin-action" onclick="abrirAdmin()"><i class="fas fa-plus-circle"></i> Novo</button>
+                <button class="menu-btn btn-admin-action" onclick="abrirGestaoCategorias()"><i class="fas fa-tags"></i> Cats</button>
+                <button class="menu-btn btn-admin-sair" onclick="sairAdmin()"><i class="fas fa-sign-out-alt"></i> Sair</button>
             </div>
-            </aside>
+        </aside>
 
         <main class="conteudo-produtos">
             <div class="grid-produtos" id="vitrine">
@@ -221,20 +249,17 @@
         let isAdmin = false;
         let filtroAtual = 'todos';
 
-        // CARREGAR DADOS INICIAIS
-        // 1. Produtos
+        // CARREGAR DADOS
         db.collection("produtos").onSnapshot((querySnapshot) => {
             produtosCache = [];
             querySnapshot.forEach((doc) => { produtosCache.push({ id: doc.id, ...doc.data() }); });
             renderVitrine();
         });
         
-        // 2. Categorias (Novo)
         db.collection("categorias").orderBy("nome").onSnapshot((querySnapshot) => {
             categoriasCache = [];
             querySnapshot.forEach((doc) => { categoriasCache.push({ id: doc.id, ...doc.data() }); });
             
-            // Se não tiver categorias no banco (primeira vez), cria as padrões
             if(categoriasCache.length === 0 && !localStorage.getItem('catInicializadas')) {
                 criarCategoriasPadrao();
             } else {
@@ -248,7 +273,21 @@
             localStorage.setItem('catInicializadas', 'true');
         }
 
-        // RENDERIZAÇÃO
+        // --- MAPA DE ÍCONES INTELIGENTE ---
+        function getIcone(nome) {
+            const map = {
+                'Natura': 'fa-leaf',
+                'Avon': 'fa-magic',
+                'O Boticário': 'fa-pump-soap',
+                'Eudora': 'fa-gem',
+                'Lingerie': 'fa-heart',
+                'Cabelos': 'fa-cut',
+                'Semijoias': 'fa-ring',
+                'Infantil': 'fa-baby'
+            };
+            return map[nome] || 'fa-star';
+        }
+
         function renderMenuCategorias() {
             const menuContainer = document.getElementById('listaCategoriasMenu');
             const selectAdmin = document.getElementById('admMarca');
@@ -256,26 +295,23 @@
             
             // 1. Menu Lateral (Cliente)
             let htmlMenu = `<button class="menu-btn ${filtroAtual === 'todos' ? 'active' : ''}" onclick="filtrar('todos')"><i class="fas fa-th-large"></i> Todos</button>`;
-            
             categoriasCache.forEach(cat => {
                 const isActive = filtroAtual === cat.nome ? 'active' : '';
-                // Ícone genérico (pode ser melhorado depois)
-                htmlMenu += `<button class="menu-btn ${isActive}" onclick="filtrar('${cat.nome}')"><i class="fas fa-tag"></i> ${cat.nome}</button>`;
+                const icone = getIcone(cat.nome);
+                htmlMenu += `<button class="menu-btn ${isActive}" onclick="filtrar('${cat.nome}')"><i class="fas ${icone}"></i> ${cat.nome}</button>`;
             });
             menuContainer.innerHTML = htmlMenu;
 
-            // 2. Select no Modal de Criar Produto (Admin)
+            // 2. Select Admin
             let htmlSelect = '';
-            categoriasCache.forEach(cat => {
-                htmlSelect += `<option value="${cat.nome}">${cat.nome}</option>`;
-            });
+            categoriasCache.forEach(cat => { htmlSelect += `<option value="${cat.nome}">${cat.nome}</option>`; });
             selectAdmin.innerHTML = htmlSelect;
 
-            // 3. Lista de Gestão (Admin)
+            // 3. Lista Gestão
             if(listaAdmin) {
                 listaAdmin.innerHTML = categoriasCache.map(cat => `
                     <div class="cat-item">
-                        <span>${cat.nome}</span>
+                        <span><i class="fas ${getIcone(cat.nome)}" style="margin-right:8px; color:#C5A059;"></i>${cat.nome}</span>
                         <i class="fas fa-trash-alt btn-del-cat" onclick="removerCategoria('${cat.id}')"></i>
                     </div>
                 `).join('');
@@ -288,7 +324,7 @@
 
             setTimeout(() => {
                 if (categoria) filtroAtual = categoria;
-                renderMenuCategorias(); // Atualiza botões ativos
+                renderMenuCategorias();
 
                 const filtrados = filtroAtual === 'todos' ? produtosCache : produtosCache.filter(p => p.marca.trim() === filtroAtual);
                 
@@ -312,157 +348,129 @@
             }, 300);
         }
 
-        // --- GESTÃO DE CATEGORIAS (NOVO) ---
-        function abrirGestaoCategorias() {
-            document.getElementById('modalCategorias').style.display = 'flex';
-        }
+        // --- GESTÃO CATEGORIAS ---
+        function abrirGestaoCategorias() { document.getElementById('modalCategorias').style.display = 'flex'; }
         function adicionarCategoria() {
             const nome = document.getElementById('novaCatNome').value.trim();
             if(!nome) return alert("Digite um nome!");
-            db.collection("categorias").add({ nome: nome }).then(() => {
-                document.getElementById('novaCatNome').value = "";
-            });
+            db.collection("categorias").add({ nome: nome }).then(() => { document.getElementById('novaCatNome').value = ""; });
         }
-        function removerCategoria(id) {
-            if(confirm("Tem certeza? Isso não apaga os produtos, mas remove a categoria do menu.")) {
-                db.collection("categorias").doc(id).delete();
-            }
-        }
+        function removerCategoria(id) { if(confirm("Remover categoria do menu?")) { db.collection("categorias").doc(id).delete(); } }
 
-        // --- SISTEMA ADMIN ---
+        // --- ADMIN SYSTEM (Corrigido para Mobile) ---
         let clicks = 0;
         document.getElementById('logoClick').onclick = () => {
             if(isAdmin) return;
             clicks++;
             if(clicks === 5) {
                 isAdmin = true;
-                document.getElementById('adminPanelDesktop').style.display = 'flex';
-                // Adiciona botão mobile se necessário
-                const sidebar = document.getElementById('sidebarMenu');
-                if(window.innerWidth <= 900) {
-                   // Lógica para mobile (adicionar botões na lista horizontal se quiser)
-                   alert("MODO ADMIN: Use um PC para melhor gestão, mas o básico funciona aqui.");
-                } else {
-                   alert("MODO ADMIN ATIVADO!");
-                }
+                // Ativa a section (o CSS media query vai decidir se mostra em coluna ou linha)
+                document.getElementById('adminPanel').style.display = 'flex';
+                alert("MODO ADMIN ATIVADO!");
                 renderVitrine();
             }
         };
 
         function sairAdmin() {
             isAdmin = false; clicks = 0;
-            document.getElementById('adminPanelDesktop').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
             alert("Modo Admin encerrado.");
             renderVitrine();
         }
 
-        // --- FUNÇÕES DE CRUD PRODUTO, UPLOAD, CARRINHO (Mantidas) ---
+        // --- CRUD & UPLOAD (Mantidos) ---
         function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; limparAdmin(); }
         function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function previewImagem(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const imgPreview = document.getElementById('previewImg');
-                imgPreview.src = URL.createObjectURL(file);
-                imgPreview.style.display = 'block';
-            }
-        }
-
+        function previewImagem(event) { const file = event.target.files[0]; if(file) { const img = document.getElementById('previewImg'); img.src = URL.createObjectURL(file); img.style.display = 'block'; } }
+        
         function comprimirImagem(file) {
             return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
+                const reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image(); img.src = e.target.result;
                     img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const MAX_WIDTH = 800;
-                        let width = img.width; let height = img.height;
-                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        canvas.width = width; canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                        const cvs = document.createElement('canvas'); const ctx = cvs.getContext('2d');
+                        const MAX=800; let w=img.width; let h=img.height;
+                        if(w>MAX){h*=MAX/w; w=MAX;} cvs.width=w; cvs.height=h;
+                        ctx.drawImage(img,0,0,w,h); resolve(cvs.toDataURL('image/jpeg',0.7));
                     };
-                };
-                reader.onerror = (error) => reject(error);
+                }; reader.onerror=reject;
             });
         }
 
         async function salvarProduto() {
-            const btn = document.getElementById('btnSalvarProd');
-            btn.innerText = "Processando..."; btn.disabled = true;
-            const id = document.getElementById('editId').value;
-            const arquivo = document.getElementById('admArquivo').files[0];
-            let urlFinal = document.getElementById('urlImagemAtual').value;
-
+            const btn = document.getElementById('btnSalvarProd'); btn.innerText="Processando..."; btn.disabled=true;
             try {
-                if (arquivo) { btn.innerText = "Comprimindo..."; urlFinal = await comprimirImagem(arquivo); }
+                let url = document.getElementById('urlImagemAtual').value;
+                const file = document.getElementById('admArquivo').files[0];
+                if(file) url = await comprimirImagem(file);
+                
                 const dados = {
                     marca: document.getElementById('admMarca').value,
                     nome: document.getElementById('admNome').value,
                     preco: parseFloat(document.getElementById('admPreco').value),
                     formato: document.getElementById('admFormato').value,
-                    img: urlFinal
+                    img: url
                 };
-                if(id) { await db.collection("produtos").doc(id).update(dados); } 
-                else { await db.collection("produtos").add(dados); }
-                alert("Produto Salvo!"); fecharModal('modalAdmin');
-            } catch (erro) { console.error(erro); alert("Erro: " + erro.message); } 
-            finally { btn.innerText = "SALVAR NO BANCO"; btn.disabled = false; }
+                
+                const id = document.getElementById('editId').value;
+                if(id) await db.collection("produtos").doc(id).update(dados);
+                else await db.collection("produtos").add(dados);
+                
+                alert("Salvo!"); fecharModal('modalAdmin');
+            } catch(e) { console.error(e); alert("Erro ao salvar"); }
+            finally { btn.innerText="SALVAR NO BANCO"; btn.disabled=false; }
         }
 
         function editarProduto(id) {
-            const p = produtosCache.find(x => x.id === id);
-            document.getElementById('editId').value = id;
-            document.getElementById('admMarca').value = p.marca;
-            document.getElementById('admNome').value = p.nome;
-            document.getElementById('admPreco').value = p.preco;
-            document.getElementById('admFormato').value = p.formato || 'ratio-quadrado';
-            document.getElementById('urlImagemAtual').value = p.img;
-            document.getElementById('previewImg').src = p.img;
-            document.getElementById('previewImg').style.display = 'block';
-            document.getElementById('btnDeletar').style.display = 'block';
-            document.getElementById('modalAdmin').style.display = 'flex';
+            const p = produtosCache.find(x=>x.id===id);
+            document.getElementById('editId').value=id;
+            document.getElementById('admMarca').value=p.marca;
+            document.getElementById('admNome').value=p.nome;
+            document.getElementById('admPreco').value=p.preco;
+            document.getElementById('admFormato').value=p.formato||'ratio-quadrado';
+            document.getElementById('urlImagemAtual').value=p.img;
+            document.getElementById('previewImg').src=p.img;
+            document.getElementById('previewImg').style.display='block';
+            document.getElementById('btnDeletar').style.display='block';
+            document.getElementById('modalAdmin').style.display='flex';
         }
 
         function deletarProduto() {
-            if(confirm("Apagar produto?")) { db.collection("produtos").doc(document.getElementById('editId').value).delete().then(() => fecharModal('modalAdmin')); }
+            if(confirm("Excluir?")) db.collection("produtos").doc(document.getElementById('editId').value).delete().then(()=>fecharModal('modalAdmin'));
         }
-
         function limparAdmin() {
-            document.getElementById('editId').value = ""; document.getElementById('admNome').value = ""; document.getElementById('admPreco').value = ""; document.getElementById('admArquivo').value = ""; document.getElementById('urlImagemAtual').value = ""; document.getElementById('admFormato').value = "ratio-quadrado"; document.getElementById('previewImg').style.display = 'none'; document.getElementById('btnDeletar').style.display = 'none';
+            document.getElementById('editId').value=""; document.getElementById('admNome').value=""; document.getElementById('admPreco').value=""; document.getElementById('admArquivo').value=""; document.getElementById('urlImagemAtual').value=""; document.getElementById('previewImg').style.display='none'; document.getElementById('btnDeletar').style.display='none';
         }
 
-        function filtrar(categoria) { renderVitrine(categoria); }
-        function addSacola(id) { if (sacola[id]) { sacola[id].qtd += 1; } else { const p = produtosCache.find(prod => prod.id === id); sacola[id] = { ...p, qtd: 1 }; } atualizarBadge(); }
-        function mudarQtd(id, delta) { if (sacola[id]) { sacola[id].qtd += delta; if (sacola[id].qtd <= 0) delete sacola[id]; atualizarBadge(); abrirCheckout(); } }
+        // --- CARRINHO & CHECKOUT ---
+        function filtrar(c) { renderVitrine(c); }
+        function addSacola(id) { if(sacola[id]) sacola[id].qtd++; else sacola[id]={...produtosCache.find(p=>p.id===id), qtd:1}; atualizarBadge(); }
+        function mudarQtd(id,d) { if(sacola[id]){ sacola[id].qtd+=d; if(sacola[id].qtd<=0) delete sacola[id]; atualizarBadge(); abrirCheckout(); } }
         function removerItem(id) { delete sacola[id]; atualizarBadge(); abrirCheckout(); }
-        function atualizarBadge() { let total = 0; Object.values(sacola).forEach(i => total += i.qtd); document.getElementById('cart-count').innerText = total; }
+        function atualizarBadge() { let t=0; Object.values(sacola).forEach(i=>t+=i.qtd); document.getElementById('cart-count').innerText=t; }
         
         function abrirCheckout() {
-            const resumo = document.getElementById('resumoItens'); const itensArray = Object.values(sacola);
-            if(itensArray.length === 0) { fecharModal('modalCheckout'); return alert("Sacola vazia!"); }
-            let grandTotal = 0;
-            resumo.innerHTML = itensArray.map(item => {
-                let subtotal = item.preco * item.qtd; grandTotal += subtotal;
-                return `<div class="item-checkout"><div style="flex-grow:1;"><div style="font-size:0.85rem; font-weight:600;">${item.nome}</div><div style="font-size:0.75rem;">${item.qtd}x R$ ${item.preco.toFixed(2).replace('.', ',')} = <b>R$ ${subtotal.toFixed(2).replace('.', ',')}</b></div></div><div class="controles-qtd"><button class="btn-qtd" onclick="mudarQtd('${item.id}', -1)">-</button><span style="font-weight:bold">${item.qtd}</span><button class="btn-qtd" onclick="mudarQtd('${item.id}', 1)">+</button></div><i class="fas fa-trash-alt btn-remover" onclick="removerItem('${item.id}')"></i></div>`;
+            const itens = Object.values(sacola);
+            if(itens.length===0) { fecharModal('modalCheckout'); return alert("Sacola vazia"); }
+            let total=0;
+            document.getElementById('resumoItens').innerHTML = itens.map(i=>{
+                total+=i.preco*i.qtd;
+                return `<div class="item-checkout"><div style="flex-grow:1"><b>${i.nome}</b><br><small>${i.qtd}x R$ ${i.preco.toFixed(2)}</small></div><div class="controles-qtd"><button class="btn-qtd" onclick="mudarQtd('${i.id}',-1)">-</button>${i.qtd}<button class="btn-qtd" onclick="mudarQtd('${i.id}',1)">+</button></div><i class="fas fa-trash-alt btn-remover" onclick="removerItem('${i.id}')"></i></div>`;
             }).join('');
-            document.getElementById('totalGeralModal').innerText = `Total: R$ ${grandTotal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('modalCheckout').style.display = 'flex';
+            document.getElementById('totalGeralModal').innerText=`Total: R$ ${total.toFixed(2)}`;
+            document.getElementById('modalCheckout').style.display='flex';
             verificarPix();
         }
         function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
-        function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Chave copiada!")); }
+        function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Copiado!")); }
         function enviarPedido() {
-            const nome = document.getElementById('nome').value; const end = document.getElementById('endereco').value; const pag = document.getElementById('pagamento').value;
-            if(!nome || !end) return alert("Preencha nome e endereço!");
+            const nome = document.getElementById('nome').value;
+            const end = document.getElementById('endereco').value;
+            if(!nome || !end) return alert("Preencha os dados!");
             let msg = `*PEDIDO VIRTUOSA*%0ACliente: ${nome}%0AEnd: ${end}%0A*ITENS:*%0A`;
-            let total = 0; Object.values(sacola).forEach(i => { total += i.preco * i.qtd; msg += `• ${i.qtd}x ${i.nome} (R$ ${(i.preco*i.qtd).toFixed(2).replace('.', ',')})%0A`; });
-            msg += `%0ATotal: R$ ${total.toFixed(2).replace('.', ',')}%0APgto: ${pag}`;
-            if(pag === 'PIX') msg += `%0A(Comprovante em anexo)`;
+            let t=0; Object.values(sacola).forEach(i=>{ t+=i.preco*i.qtd; msg+=`• ${i.qtd}x ${i.nome} (R$ ${(i.preco*i.qtd).toFixed(2)})%0A`; });
+            msg+=`%0ATotal: R$ ${t.toFixed(2)}%0APgto: ${document.getElementById('pagamento').value}`;
             window.open(`https://wa.me/5589999263346?text=${msg}`);
         }
     </script>
