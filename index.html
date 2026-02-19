@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS V25.1 (LIBERDADE DE FORMATO + ALINHAMENTO) --- */
+        /* --- ESTILOS V25.3 (FOCO EM ORGANIZAÇÃO E PREVENÇÃO DE DUPLICATAS) --- */
         :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: #fafafa; -webkit-tap-highlight-color: transparent; }
@@ -58,61 +58,55 @@
         }
         .produto-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         
-        /* FORMATOS DE IMAGEM (Liberdade Total) */
         .img-container {
             width: 100%; position: relative; margin-bottom: 10px;
             border-radius: 8px; overflow: hidden; background: #fdfdfd;
         }
-        /* As classes abaixo definem a altura baseada na largura (Aspect Ratio) */
-        .ratio-quadrado { padding-top: 100%; } /* 1:1 */
-        .ratio-retrato { padding-top: 133%; }  /* 3:4 (Mais alto) */
-        .ratio-paisagem { padding-top: 75%; }  /* 4:3 (Mais baixo) */
+        .ratio-quadrado { padding-top: 100%; }
+        .ratio-retrato { padding-top: 133%; } 
+        .ratio-paisagem { padding-top: 75%; } 
         
         .produto-img { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; /* ESSENCIAL: Preenche tudo sem deixar branco, pode cortar bordas */
+            object-fit: cover;
         }
 
         .marca-tag { font-size: 0.6rem; text-transform: uppercase; color: var(--dourado-dark); font-weight: bold; margin-bottom: 4px; }
-        
-        /* ALINHAMENTO DE TEXTO */
         .produto-nome { 
             font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; 
-            height: 38px; /* Altura fixa para alinhar */
-            line-height: 1.2; color: #333;
+            height: 38px; line-height: 1.2; color: #333;
             overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
         }
 
-        /* O ELEMENTO MÁGICO DO ALINHAMENTO */
         .spacer { flex-grow: 1; }
-
         .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; }
-        
         .btn-add { background: var(--dourado); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; width: 100%; transition: 0.2s; letter-spacing: 0.5px; }
-        .btn-add:active { transform: scale(0.95); }
         .btn-edit { position: absolute; top: 5px; right: 5px; background: white; color: #333; border-radius: 50%; width: 30px; height: 30px; font-size: 0.8rem; cursor: pointer; display: none; border: 1px solid #eee; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        /* Modais (Mantidos) */
         .cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark); color: white; padding: 15px 20px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: bold; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
         .modal-content { background: white; width: 95%; max-width: 450px; max-height: 90vh; border-radius: 20px; padding: 25px; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        
         .item-checkout { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--nude); }
         .controles-qtd { display: flex; align-items: center; gap: 10px; }
         .btn-qtd { background: var(--nude); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: var(--dourado-dark); font-weight: bold; }
         .btn-remover { color: #cc0000; margin-left: 10px; cursor: pointer; font-size: 1.1rem; }
+        
         .form-group { margin-top: 15px; }
         .form-group label { display: block; font-size: 0.7rem; color: var(--dourado-dark); font-weight: bold; margin-bottom: 5px; }
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--rose); border-radius: 8px; font-size: 0.9rem; }
-        input[type="file"] { border: 1px dashed var(--dourado); background: #fdfdfd; padding: 10px; font-size: 0.8rem; width: 100%; }
+        
+        .btn-salvar { background: var(--dourado); color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-delete { background: #fee2e2; color: #991b1b; width: 100%; padding: 10px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.8rem; }
+        
         .total-geral { margin-top: 20px; padding: 15px; background: var(--nude); border-radius: 8px; text-align: right; font-weight: bold; color: var(--dourado-dark); font-size: 1.1rem; }
         .pix-area { display: none; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
         .btn-copiar-pix { background: #16a34a; color: white; border: none; padding: 5px 15px; border-radius: 15px; font-size: 0.7rem; cursor: pointer; margin-left: 5px; font-weight: bold; }
         .btn-finalizar { background: #25d366; color: white; width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: bold; margin-top: 25px; cursor: pointer; font-size: 1rem; }
+        
         #previewImg { width: 100%; height: 150px; object-fit: contain; margin-top: 10px; border: 1px solid #eee; display: none; }
         .cat-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-        .cat-item span { font-weight: 500; }
         .btn-del-cat { color: red; cursor: pointer; font-size: 0.9rem; }
-
     </style>
 </head>
 <body>
@@ -180,28 +174,22 @@
             <h3>Gerenciar Produto</h3>
             <input type="hidden" id="editId">
             <input type="hidden" id="urlImagemAtual">
-
-            <div class="form-group"><label>Categoria / Marca</label>
-                <select id="admMarca"></select>
-            </div>
+            <div class="form-group"><label>Categoria / Marca</label><select id="admMarca"></select></div>
             <div class="form-group"><label>Nome do Produto</label><input type="text" id="admNome"></div>
-            <div class="form-group"><label>Preço (Ex: 199.90)</label><input type="number" step="0.01" id="admPreco"></div>
-            
+            <div class="form-group"><label>Preço</label><input type="number" step="0.01" id="admPreco"></div>
             <div class="form-group"><label>Formato da Foto</label>
                 <select id="admFormato">
-                    <option value="ratio-quadrado">⏹️ Quadrado (Padrão)</option>
-                    <option value="ratio-retrato">📱 Retrato (Lingerie)</option>
-                    <option value="ratio-paisagem">▬ Paisagem (Kits)</option>
+                    <option value="ratio-quadrado">⏹️ Quadrado</option>
+                    <option value="ratio-retrato">📱 Retrato</option>
+                    <option value="ratio-paisagem">▬ Paisagem</option>
                 </select>
             </div>
-
-            <div class="form-group"><label>Foto do Produto</label>
+            <div class="form-group"><label>Foto</label>
                 <input type="file" id="admArquivo" accept="image/*" onchange="previewImagem(event)">
                 <img id="previewImg" src="">
-                <small style="color:#666; font-size:0.7rem;">A foto será ajustada para preencher o formato escolhido.</small>
             </div>
-            <button type="button" class="btn-salvar" id="btnSalvarProd" onclick="salvarProduto()">SALVAR NO BANCO</button>
-            <button type="button" class="btn-delete" onclick="deletarProduto()" id="btnDeletar" style="display:none;">EXCLUIR PRODUTO</button>
+            <button type="button" class="btn-salvar" id="btnSalvarProd" onclick="salvarProduto()">SALVAR</button>
+            <button type="button" class="btn-delete" onclick="deletarProduto()" id="btnDeletar" style="display:none;">EXCLUIR</button>
             <button type="button" onclick="fecharModal('modalAdmin')" style="background:transparent; border:none; width:100%; margin-top:15px; color:#666; cursor:pointer;">Cancelar</button>
         </div>
     </div>
@@ -210,7 +198,7 @@
         <div class="modal-content">
             <h3>Gerenciar Categorias</h3>
             <div class="form-group" style="display:flex; gap:10px;">
-                <input type="text" id="novaCatNome" placeholder="Nova Categoria (Ex: Semijoias)">
+                <input type="text" id="novaCatNome" placeholder="Ex: Semijoias">
                 <button onclick="adicionarCategoria()" style="background:var(--dourado); color:white; border:none; padding:0 15px; border-radius:8px; cursor:pointer;">+</button>
             </div>
             <div id="listaCategoriasAdmin" style="margin-top:20px; max-height:300px; overflow-y:auto;"></div>
@@ -219,7 +207,7 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO FIREBASE (Mantida)
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAZEhg5sWCrDYoiL67t_1jvG-L454brf44",
             authDomain: "virtuosa-catalogo.firebaseapp.com",
@@ -237,17 +225,19 @@
         let isAdmin = false;
         let filtroAtual = 'todos';
 
-        // CARREGAR DADOS
-        db.collection("produtos").onSnapshot((querySnapshot) => {
-            produtosCache = [];
-            querySnapshot.forEach((doc) => { produtosCache.push({ id: doc.id, ...doc.data() }); });
+        // CARREGAMENTO
+        db.collection("produtos").onSnapshot((qs) => {
+            produtosCache = qs.docs.map(doc => ({id: doc.id, ...doc.data()}));
             renderVitrine();
         });
         
-        db.collection("categorias").orderBy("nome").onSnapshot((querySnapshot) => {
-            categoriasCache = [];
-            querySnapshot.forEach((doc) => { categoriasCache.push({ id: doc.id, ...doc.data() }); });
-            if(categoriasCache.length === 0 && !localStorage.getItem('catInicializadas')) { criarCategoriasPadrao(); } else { renderMenuCategorias(); }
+        db.collection("categorias").orderBy("nome").onSnapshot((qs) => {
+            categoriasCache = qs.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            if(categoriasCache.length === 0 && !localStorage.getItem('catInicializadas')) {
+                criarCategoriasPadrao();
+            } else {
+                renderMenuCategorias();
+            }
         });
 
         async function criarCategoriasPadrao() {
@@ -257,8 +247,18 @@
         }
 
         function getIcone(nome) {
-            const map = { 'Natura': 'fa-leaf', 'Avon': 'fa-magic', 'O Boticário': 'fa-pump-soap', 'Eudora': 'fa-gem', 'Lingerie': 'fa-heart', 'Cabelos': 'fa-cut', 'Semijoias': 'fa-ring', 'Infantil': 'fa-baby' };
+            const map = {'Natura':'fa-leaf','Avon':'fa-magic','O Boticário':'fa-pump-soap','Eudora':'fa-gem','Lingerie':'fa-heart','Semijoias':'fa-ring'};
             return map[nome] || 'fa-star';
+        }
+
+        // --- LÓGICA DE UNIFICAÇÃO E PREVENÇÃO DE DUPLICATAS ---
+        function obterCategoriasUnificadas() {
+            // Pega nomes das categorias cadastradas E marcas dos produtos existentes
+            const nomesFixos = categoriasCache.map(c => c.nome.trim());
+            const marcasProdutos = produtosCache.map(p => p.marca ? p.marca.trim() : "");
+            
+            // Une tudo em um Set (remove duplicatas exatas)
+            return [...new Set([...nomesFixos, ...marcasProdutos])].filter(n => n !== "").sort();
         }
 
         function renderMenuCategorias() {
@@ -266,132 +266,104 @@
             const selectAdmin = document.getElementById('admMarca');
             const listaAdmin = document.getElementById('listaCategoriasAdmin');
             
+            const cats = obterCategoriasUnificadas();
+
+            // Menu Principal
             let htmlMenu = `<button class="menu-btn ${filtroAtual === 'todos' ? 'active' : ''}" onclick="filtrar('todos')"><i class="fas fa-th-large"></i> Todos</button>`;
-            categoriasCache.forEach(cat => {
-                const isActive = filtroAtual === cat.nome ? 'active' : '';
-                htmlMenu += `<button class="menu-btn ${isActive}" onclick="filtrar('${cat.nome}')"><i class="fas ${getIcone(cat.nome)}"></i> ${cat.nome}</button>`;
+            cats.forEach(nome => {
+                htmlMenu += `<button class="menu-btn ${filtroAtual === nome ? 'active' : ''}" onclick="filtrar('${nome}')"><i class="fas ${getIcone(nome)}"></i> ${nome}</button>`;
             });
             menuContainer.innerHTML = htmlMenu;
 
-            let htmlSelect = '';
-            categoriasCache.forEach(cat => { htmlSelect += `<option value="${cat.nome}">${cat.nome}</option>`; });
-            selectAdmin.innerHTML = htmlSelect;
+            // Select no Modal de Produto
+            selectAdmin.innerHTML = cats.map(nome => `<option value="${nome}">${nome}</option>`).join('');
 
+            // Lista na Gestão de Categorias (Coleção do Firebase)
             if(listaAdmin) {
                 listaAdmin.innerHTML = categoriasCache.map(cat => `
                     <div class="cat-item">
-                        <span><i class="fas ${getIcone(cat.nome)}" style="margin-right:8px; color:#C5A059;"></i>${cat.nome}</span>
+                        <span>${cat.nome}</span>
                         <i class="fas fa-trash-alt btn-del-cat" onclick="removerCategoria('${cat.id}')"></i>
                     </div>
                 `).join('');
             }
         }
 
-        // --- RENDERIZAÇÃO DA VITRINE ---
-        function renderVitrine(categoria) {
-            const vitrine = document.getElementById('vitrine');
-            vitrine.style.opacity = '0';
-
-            setTimeout(() => {
-                if (categoria) filtroAtual = categoria;
-                renderMenuCategorias();
-
-                const filtrados = filtroAtual === 'todos' ? produtosCache : produtosCache.filter(p => p.marca.trim() === filtroAtual);
-                
-                if(filtrados.length === 0) {
-                    vitrine.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: #999;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i><p>Nenhum produto nesta categoria.</p></div>';
-                } else {
-                    vitrine.innerHTML = filtrados.map(p => {
-                        // USA O FORMATO ESCOLHIDO PELO USUÁRIO
-                        const formatoClass = p.formato ? p.formato : 'ratio-quadrado';
-                        
-                        return `
-                        <div class="produto-card">
-                            ${isAdmin ? `<button class="btn-edit" style="display:block" onclick="editarProduto('${p.id}')"><i class="fas fa-pen"></i></button>` : ''}
-                            
-                            <div class="img-container ${formatoClass}">
-                                <img src="${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/150'">
-                            </div>
-                            
-                            <div class="marca-tag">${p.marca}</div>
-                            <div class="produto-nome">${p.nome}</div>
-                            
-                            <div class="spacer"></div>
-                            
-                            <div class="produto-preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
-                            <button class="btn-add" onclick="addSacola('${p.id}')">ADICIONAR</button>
-                        </div>
-                    `}).join('');
-                }
-                vitrine.style.opacity = '1';
-            }, 300);
-        }
-
-        // --- FUNÇÕES DE ADMIN ---
-        function abrirGestaoCategorias() { document.getElementById('modalCategorias').style.display = 'flex'; }
         function adicionarCategoria() {
-            const nome = document.getElementById('novaCatNome').value.trim();
-            if(!nome) return alert("Digite um nome!");
-            db.collection("categorias").add({ nome: nome }).then(() => { document.getElementById('novaCatNome').value = ""; });
-        }
-        function removerCategoria(id) { if(confirm("Remover categoria do menu?")) { db.collection("categorias").doc(id).delete(); } }
+            const nomeInput = document.getElementById('novaCatNome').value.trim();
+            if(!nomeInput) return alert("Digite o nome!");
 
-        let clicks = 0;
-        document.getElementById('logoClick').onclick = () => {
-            if(isAdmin) return;
-            clicks++;
-            if(clicks === 5) {
-                isAdmin = true;
-                document.getElementById('adminPanel').style.display = 'flex';
-                alert("MODO ADMIN ATIVADO!");
-                renderVitrine();
+            // TRAVA DE DUPLICIDADE: Compara ignorando maiúsculas/minúsculas
+            const jaExiste = categoriasCache.some(c => c.nome.toLowerCase() === nomeInput.toLowerCase());
+            
+            if(jaExiste) {
+                alert("Essa categoria já existe!");
+                return;
             }
-        };
 
-        function sairAdmin() {
-            isAdmin = false; clicks = 0;
-            document.getElementById('adminPanel').style.display = 'none';
-            alert("Modo Admin encerrado.");
-            renderVitrine();
-        }
-
-        function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; limparAdmin(); }
-        function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-        function previewImagem(event) { const file = event.target.files[0]; if(file) { const img = document.getElementById('previewImg'); img.src = URL.createObjectURL(file); img.style.display = 'block'; } }
-        
-        function comprimirImagem(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader(); reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    const img = new Image(); img.src = e.target.result;
-                    img.onload = () => {
-                        const cvs = document.createElement('canvas'); const ctx = cvs.getContext('2d');
-                        const MAX=800; let w=img.width; let h=img.height;
-                        if(w>MAX){h*=MAX/w; w=MAX;} cvs.width=w; cvs.height=h;
-                        ctx.drawImage(img,0,0,w,h); resolve(cvs.toDataURL('image/jpeg',0.7));
-                    };
-                }; reader.onerror=reject;
+            db.collection("categorias").add({ nome: nomeInput }).then(() => {
+                document.getElementById('novaCatNome').value = "";
             });
         }
 
+        // --- VITRINE E PRODUTOS ---
+        function renderVitrine(categoria) {
+            const vitrine = document.getElementById('vitrine');
+            if (categoria) filtroAtual = categoria;
+            renderMenuCategorias();
+
+            const filtrados = filtroAtual === 'todos' ? produtosCache : produtosCache.filter(p => p.marca === filtroAtual);
+            
+            vitrine.style.opacity = '0';
+            setTimeout(() => {
+                vitrine.innerHTML = filtrados.length === 0 ? '<p style="grid-column:1/-1; text-align:center; padding:50px;">Nenhum produto aqui.</p>' :
+                filtrados.map(p => `
+                    <div class="produto-card">
+                        ${isAdmin ? `<button class="btn-edit" style="display:block" onclick="editarProduto('${p.id}')"><i class="fas fa-pen"></i></button>` : ''}
+                        <div class="img-container ${p.formato || 'ratio-quadrado'}">
+                            <img src="${p.img}" class="produto-img">
+                        </div>
+                        <div class="marca-tag">${p.marca}</div>
+                        <div class="produto-nome">${p.nome}</div>
+                        <div class="spacer"></div>
+                        <div class="produto-preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
+                        <button class="btn-add" onclick="addSacola('${p.id}')">ADICIONAR</button>
+                    </div>
+                `).join('');
+                vitrine.style.opacity = '1';
+            }, 200);
+        }
+
+        // ADMIN E AUXILIARES
+        let clicks = 0;
+        document.getElementById('logoClick').onclick = () => {
+            clicks++; if(clicks === 5) { isAdmin = true; document.getElementById('adminPanel').style.display='flex'; renderVitrine(); }
+        };
+        function sairAdmin() { isAdmin = false; clicks = 0; document.getElementById('adminPanel').style.display='none'; renderVitrine(); }
+        function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+        function abrirAdmin() { document.getElementById('modalAdmin').style.display='flex'; limparAdmin(); }
+        function removerCategoria(id) { if(confirm("Remover?")) db.collection("categorias").doc(id).delete(); }
+
         async function salvarProduto() {
-            const btn = document.getElementById('btnSalvarProd'); btn.innerText="Processando..."; btn.disabled=true;
+            const btn = document.getElementById('btnSalvarProd');
+            btn.disabled = true; btn.innerText = "Salvando...";
             try {
                 let url = document.getElementById('urlImagemAtual').value;
                 const file = document.getElementById('admArquivo').files[0];
                 if(file) url = await comprimirImagem(file);
+
                 const dados = {
                     marca: document.getElementById('admMarca').value,
                     nome: document.getElementById('admNome').value,
                     preco: parseFloat(document.getElementById('admPreco').value),
-                    formato: document.getElementById('admFormato').value, // SALVA O FORMATO ESCOLHIDO
+                    formato: document.getElementById('admFormato').value,
                     img: url
                 };
                 const id = document.getElementById('editId').value;
                 if(id) await db.collection("produtos").doc(id).update(dados); else await db.collection("produtos").add(dados);
-                alert("Salvo!"); fecharModal('modalAdmin');
-            } catch(e) { console.error(e); alert("Erro ao salvar"); }
-            finally { btn.innerText="SALVAR NO BANCO"; btn.disabled=false; }
+                fecharModal('modalAdmin');
+            } catch (e) { alert("Erro ao salvar"); }
+            finally { btn.disabled = false; btn.innerText = "SALVAR"; }
         }
 
         function editarProduto(id) {
@@ -400,7 +372,7 @@
             document.getElementById('admMarca').value=p.marca;
             document.getElementById('admNome').value=p.nome;
             document.getElementById('admPreco').value=p.preco;
-            document.getElementById('admFormato').value=p.formato || 'ratio-quadrado'; // CARREGA O FORMATO
+            document.getElementById('admFormato').value=p.formato || 'ratio-quadrado';
             document.getElementById('urlImagemAtual').value=p.img;
             document.getElementById('previewImg').src=p.img;
             document.getElementById('previewImg').style.display='block';
@@ -408,42 +380,54 @@
             document.getElementById('modalAdmin').style.display='flex';
         }
 
-        function deletarProduto() {
-            if(confirm("Excluir?")) db.collection("produtos").doc(document.getElementById('editId').value).delete().then(()=>fecharModal('modalAdmin'));
-        }
-        function limparAdmin() {
-            document.getElementById('editId').value=""; document.getElementById('admNome').value=""; document.getElementById('admPreco').value=""; document.getElementById('admArquivo').value=""; document.getElementById('urlImagemAtual').value=""; document.getElementById('previewImg').style.display='none'; document.getElementById('btnDeletar').style.display='none';
-            document.getElementById('admFormato').value = 'ratio-quadrado';
+        function deletarProduto() { if(confirm("Excluir?")) db.collection("produtos").doc(document.getElementById('editId').value).delete().then(()=>fecharModal('modalAdmin')); }
+        function limparAdmin() { document.getElementById('editId').value=""; document.getElementById('admNome').value=""; document.getElementById('admPreco').value=""; document.getElementById('admArquivo').value=""; document.getElementById('previewImg').style.display='none'; document.getElementById('btnDeletar').style.display='none'; }
+        function previewImagem(e) { if(e.target.files[0]) { document.getElementById('previewImg').src = URL.createObjectURL(e.target.files[0]); document.getElementById('previewImg').style.display='block'; } }
+        
+        function comprimirImagem(file) {
+            return new Promise((res) => {
+                const r = new FileReader(); r.readAsDataURL(file);
+                r.onload = (e) => {
+                    const i = new Image(); i.src = e.target.result;
+                    i.onload = () => {
+                        const c = document.createElement('canvas'); const x = c.getContext('2d');
+                        const M=800; let w=i.width, h=i.height;
+                        if(w>M){h*=M/w; w=M;} c.width=w; c.height=h;
+                        x.drawImage(i,0,0,w,h); res(c.toDataURL('image/jpeg',0.7));
+                    };
+                };
+            });
         }
 
+        // SACOLA
         function filtrar(c) { renderVitrine(c); }
         function addSacola(id) { if(sacola[id]) sacola[id].qtd++; else sacola[id]={...produtosCache.find(p=>p.id===id), qtd:1}; atualizarBadge(); }
         function mudarQtd(id,d) { if(sacola[id]){ sacola[id].qtd+=d; if(sacola[id].qtd<=0) delete sacola[id]; atualizarBadge(); abrirCheckout(); } }
         function removerItem(id) { delete sacola[id]; atualizarBadge(); abrirCheckout(); }
         function atualizarBadge() { let t=0; Object.values(sacola).forEach(i=>t+=i.qtd); document.getElementById('cart-count').innerText=t; }
-        
+        function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Copiado!")); }
+        function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
+
         function abrirCheckout() {
             const itens = Object.values(sacola);
-            if(itens.length===0) { fecharModal('modalCheckout'); return alert("Sacola vazia"); }
-            let total=0;
+            if(itens.length===0) return;
+            let t=0;
             document.getElementById('resumoItens').innerHTML = itens.map(i=>{
-                total+=i.preco*i.qtd;
-                return `<div class="item-checkout"><div style="flex-grow:1"><b>${i.nome}</b><br><small>${i.qtd}x R$ ${i.preco.toFixed(2)}</small></div><div class="controles-qtd"><button class="btn-qtd" onclick="mudarQtd('${i.id}',-1)">-</button>${i.qtd}<button class="btn-qtd" onclick="mudarQtd('${i.id}',1)">+</button></div><i class="fas fa-trash-alt btn-remover" onclick="removerItem('${i.id}')"></i></div>`;
+                t+=i.preco*i.qtd;
+                return `<div class="item-checkout"><div><b>${i.nome}</b><br><small>${i.qtd}x R$ ${i.preco.toFixed(2)}</small></div><div class="controles-qtd"><button class="btn-qtd" onclick="mudarQtd('${i.id}',-1)">-</button>${i.qtd}<button class="btn-qtd" onclick="mudarQtd('${i.id}',1)">+</button></div><i class="fas fa-trash-alt btn-remover" onclick="removerItem('${i.id}')"></i></div>`;
             }).join('');
-            document.getElementById('totalGeralModal').innerText=`Total: R$ ${total.toFixed(2)}`;
+            document.getElementById('totalGeralModal').innerText=`Total: R$ ${t.toFixed(2)}`;
             document.getElementById('modalCheckout').style.display='flex';
             verificarPix();
         }
-        function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
-        function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Copiado!")); }
+
         function enviarPedido() {
-            const nome = document.getElementById('nome').value;
-            const end = document.getElementById('endereco').value;
-            if(!nome || !end) return alert("Preencha os dados!");
-            let msg = `*PEDIDO VIRTUOSA*%0ACliente: ${nome}%0AEnd: ${end}%0A*ITENS:*%0A`;
-            let t=0; Object.values(sacola).forEach(i=>{ t+=i.preco*i.qtd; msg+=`• ${i.qtd}x ${i.nome} (R$ ${(i.preco*i.qtd).toFixed(2)})%0A`; });
-            msg+=`%0ATotal: R$ ${t.toFixed(2)}%0APgto: ${document.getElementById('pagamento').value}`;
-            window.open(`https://wa.me/5589999263346?text=${msg}`);
+            const n = document.getElementById('nome').value, e = document.getElementById('endereco').value;
+            if(!n || !e) return alert("Preencha tudo!");
+            let m = `*PEDIDO VIRTUOSA*%0ACliente: ${n}%0AEnd: ${e}%0A*ITENS:*%0A`;
+            let t=0; Object.values(sacola).forEach(i=>{ t+=i.preco*i.qtd; m+=`• ${i.qtd}x ${i.nome}%0A`; });
+            m+=`%0ATotal: R$ ${t.toFixed(2)}%0APgto: ${document.getElementById('pagamento').value}`;
+            window.open(`https://wa.me/5589999263346?text=${m}`);
         }
     </script>
 </body>
