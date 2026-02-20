@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS V25.3 (FOCO EM ORGANIZAÇÃO E PREVENÇÃO DE DUPLICATAS) --- */
-        :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
+        /* --- ESTILOS V26 (ESTABILIDADE E PERFORMANCE) --- */
+        :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: #fafafa; -webkit-tap-highlight-color: transparent; }
         
@@ -45,39 +45,18 @@
             .sidebar-title { display: none !important; }
             .menu-btn { width: auto; flex-shrink: 0; background: white; border: 1px solid var(--rose); padding: 8px 16px; font-size: 0.8rem; margin-bottom: 0; border-radius: 50px; }
             .admin-section { width: 100%; flex-direction: row !important; justify-content: space-around; border-top: 1px solid var(--rose); padding-top: 10px; margin-top: 5px; }
-            .menu-btn.btn-admin-action, .menu-btn.btn-admin-sair { font-size: 0.75rem; padding: 8px 12px; flex-grow: 1; justify-content: center; }
             .grid-produtos { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         }
 
         /* CARD PRODUTO */
-        .produto-card { 
-            border: 1px solid var(--nude); border-radius: 12px; padding: 10px; 
-            text-align: center; display: flex; flex-direction: column; 
-            background: #fff; height: 100%; position: relative;
-            transition: transform 0.2s;
-        }
-        .produto-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        
-        .img-container {
-            width: 100%; position: relative; margin-bottom: 10px;
-            border-radius: 8px; overflow: hidden; background: #fdfdfd;
-        }
+        .produto-card { border: 1px solid var(--nude); border-radius: 12px; padding: 10px; text-align: center; display: flex; flex-direction: column; background: #fff; height: 100%; position: relative; transition: transform 0.2s; }
+        .img-container { width: 100%; position: relative; margin-bottom: 10px; border-radius: 8px; overflow: hidden; background: #fdfdfd; }
         .ratio-quadrado { padding-top: 100%; }
-        .ratio-retrato { padding-top: 133%; } 
-        .ratio-paisagem { padding-top: 75%; } 
-        
-        .produto-img { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-        }
-
+        .ratio-retrato { padding-top: 133%; }
+        .ratio-paisagem { padding-top: 75%; }
+        .produto-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         .marca-tag { font-size: 0.6rem; text-transform: uppercase; color: var(--dourado-dark); font-weight: bold; margin-bottom: 4px; }
-        .produto-nome { 
-            font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; 
-            height: 38px; line-height: 1.2; color: #333;
-            overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-        }
-
+        .produto-nome { font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; height: 38px; line-height: 1.2; color: #333; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .spacer { flex-grow: 1; }
         .produto-preco { color: var(--dourado-dark); font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; }
         .btn-add { background: var(--dourado); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; width: 100%; transition: 0.2s; letter-spacing: 0.5px; }
@@ -85,28 +64,10 @@
 
         .cart-badge { position: fixed; bottom: 20px; right: 20px; background: var(--dourado-dark); color: white; padding: 15px 20px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: bold; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-content { background: white; width: 95%; max-width: 450px; max-height: 90vh; border-radius: 20px; padding: 25px; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-        
-        .item-checkout { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--nude); }
-        .controles-qtd { display: flex; align-items: center; gap: 10px; }
-        .btn-qtd { background: var(--nude); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: var(--dourado-dark); font-weight: bold; }
-        .btn-remover { color: #cc0000; margin-left: 10px; cursor: pointer; font-size: 1.1rem; }
-        
-        .form-group { margin-top: 15px; }
-        .form-group label { display: block; font-size: 0.7rem; color: var(--dourado-dark); font-weight: bold; margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--rose); border-radius: 8px; font-size: 0.9rem; }
-        
+        .modal-content { background: white; width: 95%; max-width: 450px; max-height: 90vh; border-radius: 20px; padding: 25px; overflow-y: auto; }
         .btn-salvar { background: var(--dourado); color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-delete { background: #fee2e2; color: #991b1b; width: 100%; padding: 10px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 0.8rem; }
-        
-        .total-geral { margin-top: 20px; padding: 15px; background: var(--nude); border-radius: 8px; text-align: right; font-weight: bold; color: var(--dourado-dark); font-size: 1.1rem; }
-        .pix-area { display: none; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
-        .btn-copiar-pix { background: #16a34a; color: white; border: none; padding: 5px 15px; border-radius: 15px; font-size: 0.7rem; cursor: pointer; margin-left: 5px; font-weight: bold; }
-        .btn-finalizar { background: #25d366; color: white; width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: bold; margin-top: 25px; cursor: pointer; font-size: 1rem; }
-        
-        #previewImg { width: 100%; height: 150px; object-fit: contain; margin-top: 10px; border: 1px solid #eee; display: none; }
+        .btn-delete { background: #fee2e2; color: #991b1b; width: 100%; padding: 10px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .cat-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-        .btn-del-cat { color: red; cursor: pointer; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -148,7 +109,6 @@
             <form id="formPedido">
                 <div class="form-group"><label>Nome da Cliente</label><input type="text" id="nome" required></div>
                 <div class="form-group"><label>Endereço de Entrega</label><input type="text" id="endereco" required></div>
-                <div class="form-group"><label>Ponto de Referência</label><input type="text" id="referencia"></div>
                 <div class="form-group"><label>Forma de Pagamento</label>
                     <select id="pagamento" onchange="verificarPix()">
                         <option value="PIX">PIX</option>
@@ -156,15 +116,11 @@
                         <option value="Dinheiro">Dinheiro</option>
                     </select>
                 </div>
-                <div id="area-pix" class="pix-area">
-                    <div style="font-size:0.8rem; font-weight:bold; color:#15803d;">Chave Pix (Celular):</div>
-                    <div style="margin: 10px 0; display: flex; justify-content: center; align-items: center;">
-                        <span style="font-family: monospace; font-size: 1.1rem; border:1px dashed #22c55e; padding:5px;">89999263346</span>
-                        <button type="button" class="btn-copiar-pix" onclick="copiarPix()">COPIAR</button>
-                    </div>
-                    <div style="font-size:0.75rem; color:#555;">Nome: <b>ILANA FERNANDA RODRIGUES</b></div>
+                <div id="area-pix" style="display:none; background:#f0fdf4; padding:15px; border-radius:8px; margin-top:10px; text-align:center;">
+                    <div style="font-weight:bold; color:#15803d;">Chave Pix: 89999263346</div>
+                    <button type="button" onclick="copiarPix()" style="margin-top:5px; padding:5px 10px; cursor:pointer;">COPIAR</button>
                 </div>
-                <button type="button" class="btn-finalizar" onclick="enviarPedido()"><i class="fab fa-whatsapp"></i> FINALIZAR NO WHATSAPP</button>
+                <button type="button" class="btn-finalizar" onclick="enviarPedido()">FINALIZAR NO WHATSAPP</button>
             </form>
         </div>
     </div>
@@ -184,11 +140,8 @@
                     <option value="ratio-paisagem">▬ Paisagem</option>
                 </select>
             </div>
-            <div class="form-group"><label>Foto</label>
-                <input type="file" id="admArquivo" accept="image/*" onchange="previewImagem(event)">
-                <img id="previewImg" src="">
-            </div>
-            <button type="button" class="btn-salvar" id="btnSalvarProd" onclick="salvarProduto()">SALVAR</button>
+            <div class="form-group"><label>Foto</label><input type="file" id="admArquivo" accept="image/*" onchange="previewImagem(event)"><img id="previewImg" src="" style="width:100%; margin-top:10px; display:none;"></div>
+            <button type="button" class="btn-salvar" id="btnSalvarProd" onclick="salvarProduto()">SALVAR NO BANCO</button>
             <button type="button" class="btn-delete" onclick="deletarProduto()" id="btnDeletar" style="display:none;">EXCLUIR</button>
             <button type="button" onclick="fecharModal('modalAdmin')" style="background:transparent; border:none; width:100%; margin-top:15px; color:#666; cursor:pointer;">Cancelar</button>
         </div>
@@ -198,7 +151,7 @@
         <div class="modal-content">
             <h3>Gerenciar Categorias</h3>
             <div class="form-group" style="display:flex; gap:10px;">
-                <input type="text" id="novaCatNome" placeholder="Ex: Semijoias">
+                <input type="text" id="novaCatNome" placeholder="Nova Categoria">
                 <button onclick="adicionarCategoria()" style="background:var(--dourado); color:white; border:none; padding:0 15px; border-radius:8px; cursor:pointer;">+</button>
             </div>
             <div id="listaCategoriasAdmin" style="margin-top:20px; max-height:300px; overflow-y:auto;"></div>
@@ -207,7 +160,6 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAZEhg5sWCrDYoiL67t_1jvG-L454brf44",
             authDomain: "virtuosa-catalogo.firebaseapp.com",
@@ -225,13 +177,13 @@
         let isAdmin = false;
         let filtroAtual = 'todos';
 
-        // CARREGAMENTO
-        db.collection("produtos").onSnapshot((qs) => {
+        // OUVINTES FIREBASE
+        db.collection("produtos").onSnapshot(qs => {
             produtosCache = qs.docs.map(doc => ({id: doc.id, ...doc.data()}));
             renderVitrine();
         });
-        
-        db.collection("categorias").orderBy("nome").onSnapshot((qs) => {
+
+        db.collection("categorias").orderBy("nome").onSnapshot(qs => {
             categoriasCache = qs.docs.map(doc => ({id: doc.id, ...doc.data()}));
             if(categoriasCache.length === 0 && !localStorage.getItem('catInicializadas')) {
                 criarCategoriasPadrao();
@@ -246,83 +198,70 @@
             localStorage.setItem('catInicializadas', 'true');
         }
 
-        function getIcone(nome) {
-            const map = {'Natura':'fa-leaf','Avon':'fa-magic','O Boticário':'fa-pump-soap','Eudora':'fa-gem','Lingerie':'fa-heart','Semijoias':'fa-ring'};
-            return map[nome] || 'fa-star';
-        }
-
-        // --- LÓGICA DE UNIFICAÇÃO E PREVENÇÃO DE DUPLICATAS ---
-        function obterCategoriasUnificadas() {
-            // Pega nomes das categorias cadastradas E marcas dos produtos existentes
-            const nomesFixos = categoriasCache.map(c => c.nome.trim());
-            const marcasProdutos = produtosCache.map(p => p.marca ? p.marca.trim() : "");
+        // --- LÓGICA DE CATEGORIAS ÚNICAS (RESOLVE MULTIPLICAÇÃO) ---
+        function obterCategoriasLimpas() {
+            // Unifica marcas dos produtos e nomes da coleção de categorias
+            const marcasProd = produtosCache.map(p => p.marca ? p.marca.trim() : "");
+            const nomesCat = categoriasCache.map(c => c.nome.trim());
             
-            // Une tudo em um Set (remove duplicatas exatas)
-            return [...new Set([...nomesFixos, ...marcasProdutos])].filter(n => n !== "").sort();
+            // Set remove duplicatas automáticas
+            const unicas = [...new Set([...marcasProd, ...nomesCat])];
+            return unicas.filter(n => n !== "").sort((a,b) => a.localeCompare(b));
         }
 
         function renderMenuCategorias() {
-            const menuContainer = document.getElementById('listaCategoriasMenu');
-            const selectAdmin = document.getElementById('admMarca');
+            const container = document.getElementById('listaCategoriasMenu');
+            const select = document.getElementById('admMarca');
             const listaAdmin = document.getElementById('listaCategoriasAdmin');
-            
-            const cats = obterCategoriasUnificadas();
+            const cats = obterCategoriasLimpas();
 
-            // Menu Principal
-            let htmlMenu = `<button class="menu-btn ${filtroAtual === 'todos' ? 'active' : ''}" onclick="filtrar('todos')"><i class="fas fa-th-large"></i> Todos</button>`;
+            // Renderiza Menu
+            let html = `<button class="menu-btn ${filtroAtual === 'todos' ? 'active' : ''}" onclick="filtrar('todos')"><i class="fas fa-th-large"></i> Todos</button>`;
             cats.forEach(nome => {
-                htmlMenu += `<button class="menu-btn ${filtroAtual === nome ? 'active' : ''}" onclick="filtrar('${nome}')"><i class="fas ${getIcone(nome)}"></i> ${nome}</button>`;
+                const icone = {'Natura':'fa-leaf','Avon':'fa-magic','O Boticário':'fa-pump-soap','Eudora':'fa-gem','Lingerie':'fa-heart'}[nome] || 'fa-star';
+                html += `<button class="menu-btn ${filtroAtual === nome ? 'active' : ''}" onclick="filtrar('${nome}')"><i class="fas ${icone}"></i> ${nome}</button>`;
             });
-            menuContainer.innerHTML = htmlMenu;
+            container.innerHTML = html;
 
-            // Select no Modal de Produto
-            selectAdmin.innerHTML = cats.map(nome => `<option value="${nome}">${nome}</option>`).join('');
+            // Renderiza Select do Admin
+            select.innerHTML = cats.map(n => `<option value="${n}">${n}</option>`).join('');
 
-            // Lista na Gestão de Categorias (Coleção do Firebase)
+            // Renderiza Gestão
             if(listaAdmin) {
-                listaAdmin.innerHTML = categoriasCache.map(cat => `
-                    <div class="cat-item">
-                        <span>${cat.nome}</span>
-                        <i class="fas fa-trash-alt btn-del-cat" onclick="removerCategoria('${cat.id}')"></i>
-                    </div>
+                listaAdmin.innerHTML = categoriasCache.map(c => `
+                    <div class="cat-item"><span>${c.nome}</span><i class="fas fa-trash-alt" onclick="removerCategoria('${c.id}')" style="color:red; cursor:pointer;"></i></div>
                 `).join('');
             }
         }
 
+        // --- TRAVA DE DUPLICIDADE NO BANCO ---
         function adicionarCategoria() {
-            const nomeInput = document.getElementById('novaCatNome').value.trim();
-            if(!nomeInput) return alert("Digite o nome!");
+            const nome = document.getElementById('novaCatNome').value.trim();
+            if(!nome) return;
 
-            // TRAVA DE DUPLICIDADE: Compara ignorando maiúsculas/minúsculas
-            const jaExiste = categoriasCache.some(c => c.nome.toLowerCase() === nomeInput.toLowerCase());
-            
-            if(jaExiste) {
-                alert("Essa categoria já existe!");
-                return;
-            }
+            // Normaliza para comparação (tudo minusculo)
+            const duplicado = categoriasCache.some(c => c.nome.toLowerCase() === nome.toLowerCase());
+            if(duplicado) return alert("Essa categoria já existe no sistema!");
 
-            db.collection("categorias").add({ nome: nomeInput }).then(() => {
+            db.collection("categorias").add({ nome: nome }).then(() => {
                 document.getElementById('novaCatNome').value = "";
             });
         }
 
-        // --- VITRINE E PRODUTOS ---
-        function renderVitrine(categoria) {
+        // --- VITRINE ---
+        function renderVitrine(cat) {
             const vitrine = document.getElementById('vitrine');
-            if (categoria) filtroAtual = categoria;
+            if(cat) filtroAtual = cat;
             renderMenuCategorias();
 
             const filtrados = filtroAtual === 'todos' ? produtosCache : produtosCache.filter(p => p.marca === filtroAtual);
             
             vitrine.style.opacity = '0';
             setTimeout(() => {
-                vitrine.innerHTML = filtrados.length === 0 ? '<p style="grid-column:1/-1; text-align:center; padding:50px;">Nenhum produto aqui.</p>' :
-                filtrados.map(p => `
+                vitrine.innerHTML = filtrados.map(p => `
                     <div class="produto-card">
                         ${isAdmin ? `<button class="btn-edit" style="display:block" onclick="editarProduto('${p.id}')"><i class="fas fa-pen"></i></button>` : ''}
-                        <div class="img-container ${p.formato || 'ratio-quadrado'}">
-                            <img src="${p.img}" class="produto-img">
-                        </div>
+                        <div class="img-container ${p.formato || 'ratio-quadrado'}"><img src="${p.img}" class="produto-img"></div>
                         <div class="marca-tag">${p.marca}</div>
                         <div class="produto-nome">${p.nome}</div>
                         <div class="spacer"></div>
@@ -334,24 +273,22 @@
             }, 200);
         }
 
-        // ADMIN E AUXILIARES
+        // FUNÇÕES GERAIS
         let clicks = 0;
-        document.getElementById('logoClick').onclick = () => {
-            clicks++; if(clicks === 5) { isAdmin = true; document.getElementById('adminPanel').style.display='flex'; renderVitrine(); }
-        };
-        function sairAdmin() { isAdmin = false; clicks = 0; document.getElementById('adminPanel').style.display='none'; renderVitrine(); }
-        function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+        document.getElementById('logoClick').onclick = () => { clicks++; if(clicks===5){ isAdmin=true; document.getElementById('adminPanel').style.display='flex'; renderVitrine(); alert("ADMIN ATIVO"); }};
+        function sairAdmin() { isAdmin=false; clicks=0; document.getElementById('adminPanel').style.display='none'; renderVitrine(); }
+        function fecharModal(id) { document.getElementById(id).style.display='none'; }
+        function filtrar(c) { renderVitrine(c); }
         function abrirAdmin() { document.getElementById('modalAdmin').style.display='flex'; limparAdmin(); }
-        function removerCategoria(id) { if(confirm("Remover?")) db.collection("categorias").doc(id).delete(); }
+        function removerCategoria(id) { if(confirm("Excluir?")) db.collection("categorias").doc(id).delete(); }
 
         async function salvarProduto() {
             const btn = document.getElementById('btnSalvarProd');
-            btn.disabled = true; btn.innerText = "Salvando...";
+            btn.disabled = true;
             try {
                 let url = document.getElementById('urlImagemAtual').value;
                 const file = document.getElementById('admArquivo').files[0];
                 if(file) url = await comprimirImagem(file);
-
                 const dados = {
                     marca: document.getElementById('admMarca').value,
                     nome: document.getElementById('admNome').value,
@@ -362,8 +299,8 @@
                 const id = document.getElementById('editId').value;
                 if(id) await db.collection("produtos").doc(id).update(dados); else await db.collection("produtos").add(dados);
                 fecharModal('modalAdmin');
-            } catch (e) { alert("Erro ao salvar"); }
-            finally { btn.disabled = false; btn.innerText = "SALVAR"; }
+            } catch(e) { alert("Erro ao salvar"); }
+            finally { btn.disabled = false; }
         }
 
         function editarProduto(id) {
@@ -381,8 +318,8 @@
         }
 
         function deletarProduto() { if(confirm("Excluir?")) db.collection("produtos").doc(document.getElementById('editId').value).delete().then(()=>fecharModal('modalAdmin')); }
-        function limparAdmin() { document.getElementById('editId').value=""; document.getElementById('admNome').value=""; document.getElementById('admPreco').value=""; document.getElementById('admArquivo').value=""; document.getElementById('previewImg').style.display='none'; document.getElementById('btnDeletar').style.display='none'; }
-        function previewImagem(e) { if(e.target.files[0]) { document.getElementById('previewImg').src = URL.createObjectURL(e.target.files[0]); document.getElementById('previewImg').style.display='block'; } }
+        function limparAdmin() { document.getElementById('editId').value=""; document.getElementById('admNome').value=""; document.getElementById('admPreco').value=""; document.getElementById('previewImg').style.display='none'; document.getElementById('btnDeletar').style.display='none'; }
+        function previewImagem(e) { if(e.target.files[0]) { document.getElementById('previewImg').src=URL.createObjectURL(e.target.files[0]); document.getElementById('previewImg').style.display='block'; } }
         
         function comprimirImagem(file) {
             return new Promise((res) => {
@@ -391,23 +328,21 @@
                     const i = new Image(); i.src = e.target.result;
                     i.onload = () => {
                         const c = document.createElement('canvas'); const x = c.getContext('2d');
-                        const M=800; let w=i.width, h=i.height;
-                        if(w>M){h*=M/w; w=M;} c.width=w; c.height=h;
-                        x.drawImage(i,0,0,w,h); res(c.toDataURL('image/jpeg',0.7));
+                        c.width=800; c.height=(i.height*800)/i.width;
+                        x.drawImage(i,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',0.7));
                     };
                 };
             });
         }
 
         // SACOLA
-        function filtrar(c) { renderVitrine(c); }
         function addSacola(id) { if(sacola[id]) sacola[id].qtd++; else sacola[id]={...produtosCache.find(p=>p.id===id), qtd:1}; atualizarBadge(); }
         function mudarQtd(id,d) { if(sacola[id]){ sacola[id].qtd+=d; if(sacola[id].qtd<=0) delete sacola[id]; atualizarBadge(); abrirCheckout(); } }
         function removerItem(id) { delete sacola[id]; atualizarBadge(); abrirCheckout(); }
         function atualizarBadge() { let t=0; Object.values(sacola).forEach(i=>t+=i.qtd); document.getElementById('cart-count').innerText=t; }
-        function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Copiado!")); }
+        function copiarPix() { navigator.clipboard.writeText("89999263346").then(()=>alert("Copiado!")); }
         function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
-
+        
         function abrirCheckout() {
             const itens = Object.values(sacola);
             if(itens.length===0) return;
@@ -418,7 +353,6 @@
             }).join('');
             document.getElementById('totalGeralModal').innerText=`Total: R$ ${t.toFixed(2)}`;
             document.getElementById('modalCheckout').style.display='flex';
-            verificarPix();
         }
 
         function enviarPedido() {
