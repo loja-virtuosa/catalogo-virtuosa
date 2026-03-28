@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS V25.1 (LIBERDADE DE FORMATO + ALINHAMENTO) --- */
+        /* --- ESTILOS GERAIS --- */
         :root { --dourado: #C5A059; --dourado-dark: #A68546; --nude: #F9F1F0; --rose: #EAD8D3; --branco: #FFFFFF; --texto: #4A4A4A; }
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
         body { font-family: 'Montserrat', sans-serif; color: var(--texto); background-color: #fafafa; -webkit-tap-highlight-color: transparent; }
@@ -247,7 +247,7 @@
         let sacola = {};
         let isAdmin = false;
         let filtroAtual = 'todos';
-        let termoBusca = ""; // Variável global de pesquisa
+        let termoBusca = ""; 
 
         // CARREGAR DADOS
         db.collection("produtos").onSnapshot((querySnapshot) => {
@@ -259,6 +259,8 @@
         db.collection("categorias").orderBy("nome").onSnapshot((querySnapshot) => {
             categoriasCache = [];
             querySnapshot.forEach((doc) => { categoriasCache.push({ id: doc.id, ...doc.data() }); });
+            
+            // Inicia padrão se não tiver nada no banco e não tiver a chave de controle
             if(categoriasCache.length === 0 && !localStorage.getItem('catInicializadas')) { 
                 criarCategoriasPadrao(); 
             } else { 
@@ -266,9 +268,18 @@
             }
         });
 
+        // CRIAÇÃO BLINDADA DE CATEGORIAS
         async function criarCategoriasPadrao() {
             const padroes = ["Natura", "Avon", "O Boticário", "Eudora", "Lingerie", "Presentes"];
-            for (const cat of padroes) { await db.collection("categorias").add({ nome: cat }); }
+            
+            const snapshot = await db.collection("categorias").get();
+            const existentes = snapshot.docs.map(doc => doc.data().nome ? doc.data().nome.toLowerCase() : "");
+
+            for (const cat of padroes) { 
+                if (!existentes.includes(cat.toLowerCase())) {
+                    await db.collection("categorias").add({ nome: cat }); 
+                }
+            }
             localStorage.setItem('catInicializadas', 'true');
         }
 
@@ -290,6 +301,7 @@
             const listaAdmin = document.getElementById('listaCategoriasAdmin');
             const categoriasUnicas = getCategoriasUnicas();
 
+            // Menu Principal
             let htmlMenu = `<button class="menu-btn ${filtroAtual === 'todos' ? 'active' : ''}" onclick="filtrar('todos')"><i class="fas fa-th-large"></i> Todos</button>`;
             categoriasUnicas.forEach(catNome => {
                 const isActive = filtroAtual === catNome ? 'active' : '';
@@ -297,27 +309,37 @@
             });
             menuContainer.innerHTML = htmlMenu;
 
+            // Select Produto Admin
             let htmlSelect = '';
             categoriasUnicas.forEach(catNome => { htmlSelect += `<option value="${catNome}">${catNome}</option>`; });
             if(selectAdmin) selectAdmin.innerHTML = htmlSelect;
 
+            // Lista Admin Agrupada (Limpeza Visual)
             if(listaAdmin) {
-                listaAdmin.innerHTML = categoriasCache.map(cat => `
+                const categoriasAgrupadasAdmin = [];
+                categoriasCache.forEach(cat => {
+                    if (cat.nome && !categoriasAgrupadasAdmin.find(c => c.nome.toLowerCase() === cat.nome.toLowerCase())) {
+                        categoriasAgrupadasAdmin.push(cat);
+                    }
+                });
+
+                listaAdmin.innerHTML = categoriasAgrupadasAdmin.map(cat => `
                     <div class="cat-item">
                         <span><i class="fas ${getIcone(cat.nome)}" style="margin-right:8px; color:#C5A059;"></i>${cat.nome}</span>
-                        <i class="fas fa-trash-alt btn-del-cat" onclick="removerCategoria('${cat.id}')"></i>
+                        <i class="fas fa-trash-alt btn-del-cat" onclick="removerCategoriaLimpezaBanco('${cat.nome.replace(/'/g, "\\'")}')"></i>
                     </div>
                 `).join('');
             }
         }
 
-        // LÓGICA DE PESQUISA
+        // LÓGICA DE PESQUISA E FILTRO
         function pesquisar() {
             termoBusca = document.getElementById('inputPesquisa').value.toLowerCase();
             renderVitrine(filtroAtual);
         }
 
-        // RENDERIZAÇÃO DA VITRINE (COM BUSCA E CATEGORIA JUNTAS)
+        function filtrar(c) { renderVitrine(c); }
+
         function renderVitrine(categoria) {
             const vitrine = document.getElementById('vitrine');
             vitrine.style.opacity = '0';
@@ -326,10 +348,9 @@
                 if (categoria) filtroAtual = categoria;
                 renderMenuCategorias();
 
-                // Passo 1: Filtra por categoria
+                // Filtra por Categoria e depois pela Busca
                 let filtrados = filtroAtual === 'todos' ? produtosCache : produtosCache.filter(p => p.marca && p.marca.trim() === filtroAtual);
                 
-                // Passo 2: Filtra pelo termo de pesquisa
                 if (termoBusca.trim() !== "") {
                     filtrados = filtrados.filter(p => p.nome.toLowerCase().includes(termoBusca));
                 }
@@ -366,7 +387,7 @@
             }, 300);
         }
 
-        // ADMIN E CATEGORIAS
+        // ADMIN DE CATEGORIAS
         function abrirGestaoCategorias() { document.getElementById('modalCategorias').style.display = 'flex'; }
         
         function adicionarCategoria() {
@@ -377,8 +398,16 @@
             db.collection("categorias").add({ nome: nome }).then(() => { document.getElementById('novaCatNome').value = ""; });
         }
         
-        function removerCategoria(id) { if(confirm("Remover categoria do menu?")) { db.collection("categorias").doc(id).delete(); } }
+        async function removerCategoriaLimpezaBanco(nome) { 
+            if(confirm(`Remover a categoria ${nome} e limpar duplicatas do banco?`)) { 
+                const docsParaDeletar = categoriasCache.filter(c => c.nome && c.nome.toLowerCase() === nome.toLowerCase());
+                for (let doc of docsParaDeletar) {
+                    await db.collection("categorias").doc(doc.id).delete();
+                }
+            } 
+        }
 
+        // MODO ADMIN CONTROLES
         let clicks = 0;
         document.getElementById('logoClick').onclick = () => {
             if(isAdmin) return;
@@ -396,6 +425,7 @@
         function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
         function previewImagem(event) { const file = event.target.files[0]; if(file) { const img = document.getElementById('previewImg'); img.src = URL.createObjectURL(file); img.style.display = 'block'; } }
         
+        // COMPRESSÃO BASE64 E SALVAMENTO (Bomba-relógio documentada)
         function comprimirImagem(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader(); reader.readAsDataURL(file);
@@ -449,7 +479,6 @@
         function limparAdmin() { document.getElementById('editId').value=""; document.getElementById('admNome').value=""; document.getElementById('admPreco').value=""; document.getElementById('admArquivo').value=""; document.getElementById('urlImagemAtual').value=""; document.getElementById('previewImg').style.display='none'; document.getElementById('btnDeletar').style.display='none'; document.getElementById('admFormato').value = 'ratio-quadrado'; }
 
         // CHECKOUT E SACOLA
-        function filtrar(c) { renderVitrine(c); }
         function addSacola(id) { if(sacola[id]) sacola[id].qtd++; else sacola[id]={...produtosCache.find(p=>p.id===id), qtd:1}; atualizarBadge(); }
         function mudarQtd(id,d) { if(sacola[id]){ sacola[id].qtd+=d; if(sacola[id].qtd<=0) delete sacola[id]; atualizarBadge(); abrirCheckout(); } }
         function removerItem(id) { delete sacola[id]; atualizarBadge(); abrirCheckout(); }
@@ -471,7 +500,7 @@
         function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
         function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Copiado!")); }
         
-        // A CORREÇÃO DE CONVERSÃO ESTÁ AQUI (encodeURIComponent)
+        // FECHAMENTO NO WHATSAPP COM ENCODE SEGURO
         function enviarPedido() {
             const nome = document.getElementById('nome').value.trim();
             const end = document.getElementById('endereco').value.trim();
@@ -494,7 +523,6 @@
             msg+=`\n*Total: R$ ${t.toFixed(2)}*\n`;
             msg+=`Forma de Pagamento: ${document.getElementById('pagamento').value}`;
             
-            // encodeURIComponent converte a quebra de linha \n e caracteres especiais para formato web seguro
             const urlSegura = `https://wa.me/5589999263346?text=${encodeURIComponent(msg)}`;
             window.open(urlSegura, '_blank');
         }
