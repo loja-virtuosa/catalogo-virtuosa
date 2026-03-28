@@ -249,6 +249,28 @@
         let filtroAtual = 'todos';
         let termoBusca = ""; 
 
+        // ==========================================
+        // MOTOR DE BUSCA INTELIGENTE (CONVERSÃO)
+        // ==========================================
+        
+        function normalizarTexto(texto) {
+            if(!texto) return "";
+            return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        }
+
+        const dicionarioSinonimos = {
+            "perfume": ["colonia", "fragrancia", "edp", "edt", "deo parfum"],
+            "colonia": ["perfume", "fragrancia", "desodorante", "body splash"],
+            "maquiagem": ["make", "batom", "base", "rimel", "corretivo", "sombra", "blush", "mascara de cilios", "po compacto"],
+            "make": ["maquiagem"],
+            "creme": ["hidratante", "locao", "polpa", "manteiga corporal"],
+            "hidratante": ["creme", "locao", "polpa"],
+            "banho": ["sabonete", "gel de banho", "espuma", "esfoliante"],
+            "joia": ["semijoia", "brinco", "colar", "anel", "pulseira", "pingente", "corrente"],
+            "semijoia": ["joia", "brinco", "colar", "anel", "pulseira", "pingente"],
+            "presente": ["kit", "combo", "conjunto", "embalagem"]
+        };
+
         // CARREGAR DADOS
         db.collection("produtos").onSnapshot((querySnapshot) => {
             produtosCache = [];
@@ -259,8 +281,6 @@
         db.collection("categorias").orderBy("nome").onSnapshot((querySnapshot) => {
             categoriasCache = [];
             querySnapshot.forEach((doc) => { categoriasCache.push({ id: doc.id, ...doc.data() }); });
-            
-            // Inicia padrão se não tiver nada no banco e não tiver a chave de controle
             if(categoriasCache.length === 0 && !localStorage.getItem('catInicializadas')) { 
                 criarCategoriasPadrao(); 
             } else { 
@@ -271,7 +291,6 @@
         // CRIAÇÃO BLINDADA DE CATEGORIAS
         async function criarCategoriasPadrao() {
             const padroes = ["Natura", "Avon", "O Boticário", "Eudora", "Lingerie", "Presentes"];
-            
             const snapshot = await db.collection("categorias").get();
             const existentes = snapshot.docs.map(doc => doc.data().nome ? doc.data().nome.toLowerCase() : "");
 
@@ -301,7 +320,6 @@
             const listaAdmin = document.getElementById('listaCategoriasAdmin');
             const categoriasUnicas = getCategoriasUnicas();
 
-            // Menu Principal
             let htmlMenu = `<button class="menu-btn ${filtroAtual === 'todos' ? 'active' : ''}" onclick="filtrar('todos')"><i class="fas fa-th-large"></i> Todos</button>`;
             categoriasUnicas.forEach(catNome => {
                 const isActive = filtroAtual === catNome ? 'active' : '';
@@ -309,12 +327,10 @@
             });
             menuContainer.innerHTML = htmlMenu;
 
-            // Select Produto Admin
             let htmlSelect = '';
             categoriasUnicas.forEach(catNome => { htmlSelect += `<option value="${catNome}">${catNome}</option>`; });
             if(selectAdmin) selectAdmin.innerHTML = htmlSelect;
 
-            // Lista Admin Agrupada (Limpeza Visual)
             if(listaAdmin) {
                 const categoriasAgrupadasAdmin = [];
                 categoriasCache.forEach(cat => {
@@ -332,9 +348,9 @@
             }
         }
 
-        // LÓGICA DE PESQUISA E FILTRO
+        // CAPTURA DA PESQUISA
         function pesquisar() {
-            termoBusca = document.getElementById('inputPesquisa').value.toLowerCase();
+            termoBusca = document.getElementById('inputPesquisa').value;
             renderVitrine(filtroAtual);
         }
 
@@ -348,11 +364,24 @@
                 if (categoria) filtroAtual = categoria;
                 renderMenuCategorias();
 
-                // Filtra por Categoria e depois pela Busca
                 let filtrados = filtroAtual === 'todos' ? produtosCache : produtosCache.filter(p => p.marca && p.marca.trim() === filtroAtual);
                 
+                // LÓGICA DE FILTRAGEM AVANÇADA
                 if (termoBusca.trim() !== "") {
-                    filtrados = filtrados.filter(p => p.nome.toLowerCase().includes(termoBusca));
+                    const buscaNorm = normalizarTexto(termoBusca);
+                    let termosParaBuscar = [buscaNorm];
+                    
+                    for (let chave in dicionarioSinonimos) {
+                        if (buscaNorm.includes(chave)) {
+                            termosParaBuscar = termosParaBuscar.concat(dicionarioSinonimos[chave]);
+                        }
+                    }
+
+                    filtrados = filtrados.filter(p => {
+                        const nomeProdNorm = normalizarTexto(p.nome);
+                        const marcaProdNorm = normalizarTexto(p.marca); 
+                        return termosParaBuscar.some(termo => nomeProdNorm.includes(termo) || marcaProdNorm.includes(termo));
+                    });
                 }
                 
                 if(filtrados.length === 0) {
@@ -401,9 +430,7 @@
         async function removerCategoriaLimpezaBanco(nome) { 
             if(confirm(`Remover a categoria ${nome} e limpar duplicatas do banco?`)) { 
                 const docsParaDeletar = categoriasCache.filter(c => c.nome && c.nome.toLowerCase() === nome.toLowerCase());
-                for (let doc of docsParaDeletar) {
-                    await db.collection("categorias").doc(doc.id).delete();
-                }
+                for (let doc of docsParaDeletar) { await db.collection("categorias").doc(doc.id).delete(); }
             } 
         }
 
@@ -425,7 +452,6 @@
         function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
         function previewImagem(event) { const file = event.target.files[0]; if(file) { const img = document.getElementById('previewImg'); img.src = URL.createObjectURL(file); img.style.display = 'block'; } }
         
-        // COMPRESSÃO BASE64 E SALVAMENTO (Bomba-relógio documentada)
         function comprimirImagem(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader(); reader.readAsDataURL(file);
@@ -457,7 +483,7 @@
                 const id = document.getElementById('editId').value;
                 if(id) await db.collection("produtos").doc(id).update(dados); else await db.collection("produtos").add(dados);
                 alert("Salvo!"); fecharModal('modalAdmin');
-            } catch(e) { console.error(e); alert("Erro ao salvar"); }
+            } catch(e) { console.error(e); alert("Erro ao salvar. Sua imagem pode estar muito pesada."); }
             finally { btn.innerText="SALVAR NO BANCO"; btn.disabled=false; }
         }
 
@@ -500,7 +526,6 @@
         function verificarPix() { document.getElementById('area-pix').style.display = document.getElementById('pagamento').value === 'PIX' ? 'block' : 'none'; }
         function copiarPix() { navigator.clipboard.writeText("89999263346").then(() => alert("Copiado!")); }
         
-        // FECHAMENTO NO WHATSAPP COM ENCODE SEGURO
         function enviarPedido() {
             const nome = document.getElementById('nome').value.trim();
             const end = document.getElementById('endereco').value.trim();
@@ -508,9 +533,7 @@
             
             if(!nome || !end) return alert("Preencha os dados de entrega corretamente!");
             
-            let msg = `*PEDIDO VIRTUOSA*\n`;
-            msg += `Cliente: ${nome}\n`;
-            msg += `Endereço: ${end}\n`;
+            let msg = `*PEDIDO VIRTUOSA*\nCliente: ${nome}\nEndereço: ${end}\n`;
             if (ref) msg += `Referência: ${ref}\n`;
             msg += `\n*ITENS:*\n`;
             
@@ -520,8 +543,7 @@
                 msg+=`• ${i.qtd}x ${i.nome} (R$ ${(i.preco*i.qtd).toFixed(2)})\n`; 
             });
             
-            msg+=`\n*Total: R$ ${t.toFixed(2)}*\n`;
-            msg+=`Forma de Pagamento: ${document.getElementById('pagamento').value}`;
+            msg+=`\n*Total: R$ ${t.toFixed(2)}*\nForma de Pagamento: ${document.getElementById('pagamento').value}`;
             
             const urlSegura = `https://wa.me/5589999263346?text=${encodeURIComponent(msg)}`;
             window.open(urlSegura, '_blank');
